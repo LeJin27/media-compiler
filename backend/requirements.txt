@@ -1,0 +1,7 @@
+python-dotenv
+requests
+spotipy
+youtube_search
+ffmpeg
+ffmprobe
+yt_dlp
