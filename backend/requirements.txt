@@ -6,3 +6,4 @@ ffmpeg
 ffmprobe
 yt_dlp
 fastapi[standard]
+psycopg[binary]
