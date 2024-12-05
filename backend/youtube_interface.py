@@ -30,29 +30,43 @@ class YoutubeInterface():
     
     def download_video(self, video_url):
         """
-        Downloads videos given a url
+        Downloads video and returns a json containing related metadata
 
         Args:
-            video_url (string): Url for youtube
-        """
-        with YoutubeDL(self.ytdl_opts) as ydl:
-            video_json = ydl.download(video_url)
-        
+            video_url (string): A youtube url.
 
+        Returns:
+            video_json (dict): Meta data related to youtube file
+        """
+        file_path = ""
+        with YoutubeDL(self.ytdl_opts) as ydl:
+            video_json = ydl.extract_info(video_url, download=True)
+            file_path = ydl.prepare_filename(video_json)
+
+            video_json = {
+                "youtube_length": video_json['duration'], # gets lenght of video
+                "youtube_name": video_json['fulltitle'],
+                "youtube_url": video_json['original_url'],
+                "youtube_path" : file_path
+            }
+        
         return video_json
 
 
 
     def load_info(self, video_url):
+        """
+        Returns all info related to url
+
+        Args:
+            video_url (string): A youtube url.
+
+        Returns:
+            yt_json (dict): Metadata that contains all extracted data
+        """
         with YoutubeDL(self.ytdl_opts) as ydl:
             yt_json = ydl.extract_info(video_url, download=False)
-
-            video_json = {
-                "youtube_length": yt_json['duration'] # gets lenght of video
-            }
-
-
-            return video_json
+            return yt_json
     
 
     
@@ -62,7 +76,9 @@ class YoutubeInterface():
 
         Args:
             song_name (string): Name for song that is used to query youtube
-            return ([string]): A list youtube urls
+
+        Returns:
+            song_url (string): Metadata that contains all extracted data
         """
         search_count = 1
         results = YoutubeSearch(song_name, max_results=search_count).to_dict()
@@ -72,9 +88,6 @@ class YoutubeInterface():
         
         return song_url
     
-    def search_and_download(self, song_name):
-        song_url = self.search_song(song_name)
-        self.download_video(song_url)
 
 
 
