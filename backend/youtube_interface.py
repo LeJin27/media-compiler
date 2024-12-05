@@ -52,7 +52,7 @@ class YoutubeInterface():
     
 
     
-    def search_link(self, song_name):
+    def search_song(self, song_name):
         """
         Searches youtube using a song name and retrieves youtube urls
 
@@ -69,7 +69,7 @@ class YoutubeInterface():
         return song_url
     
     def search_and_download(self, song_name):
-        song_url = self.search_link(song_name)
+        song_url = self.search_song(song_name)
         self.download_video(song_url)
 
 

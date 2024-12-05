@@ -39,12 +39,20 @@ def download_from_playlist(sp, yt, playlist_url):
 
     for track in tracks:
         track_yt_query = track['spotify_yt_query']
-        track_url = yt.search_link(track_yt_query)
+        track_url = yt.search_song(track_yt_query)
 
         video_json = yt.load_info(track_url)
         track.update(video_json)
 
         helper_prettify(track)
+    
+
+
+link = yt.search_song("Test")
+info = yt.load_info(link)
+helper_prettify(info)
+
+print(link)
 
 
         
@@ -52,7 +60,6 @@ def download_from_playlist(sp, yt, playlist_url):
 
 
 
-download_from_playlist(sp, yt, "https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=42b65b6275724d38")()
 
 
 
