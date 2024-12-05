@@ -5,3 +5,4 @@ youtube_search
 ffmpeg
 ffmprobe
 yt_dlp
+fastapi[standard]

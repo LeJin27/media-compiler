@@ -36,10 +36,21 @@ class YoutubeInterface():
             video_url (string): Url for youtube
         """
         with YoutubeDL(self.ytdl_opts) as ydl:
-            #ydl.download([video_url])
-            video_json = ydl.extract_info(video_url, download=True)
-            video_length = video_json['duration'] # returns code in seconds
-            print(video_length)
+            video_json = ydl.download(video_url)
+
+
+    def load_info(self, video_url):
+        with YoutubeDL(self.ytdl_opts) as ydl:
+            yt_json = ydl.extract_info(video_url, download=False)
+
+            video_json = {
+                "youtube_length": yt_json['duration'] # gets lenght of video
+            }
+
+
+            return video_json
+    
+
     
     def search_link(self, song_name):
         """

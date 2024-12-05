@@ -77,12 +77,11 @@ class SpotifyInterface:
             track_yt_query += " " + artist['name']
 
         
-        track_json = {"track_name": track_name,
-                      "track_artists": track_artists,
-                      "track_external_urls": track_external_url,
-                      "track_yt_query": track_yt_query
+        track_json = {"spotify_name": track_name,
+                      "spotify_artists": track_artists,
+                      "spotify_external_urls": track_external_url,
+                      "spotify_yt_query": track_yt_query
                       }
-        
         return track_json
         
         
