@@ -9,21 +9,21 @@ def helper_prettify(json_to_prettify):
     print(pprint.pformat(json_to_prettify, indent=1, width=80))
 
 
-FFMPEG_PATH = '/opt/homebrew/bin/ffmpeg'
+#FFMPEG_PATH = '/opt/homebrew/bin/ffmpeg'
 OUTPUT_PATH = {
     'home' : "./music",
 }
 
 YTDL_OPTS = {
     'format': 'm4a/bestaudio/best',
-    'ffmpeg_location': FFMPEG_PATH,  # Path to your local FFmpeg binary
+    #'ffmpeg_location': FFMPEG_PATH,  # Path to your local FFmpeg binary
     'paths': OUTPUT_PATH,
 
     # ℹ️ See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
-    'postprocessors': [{  # Extract audio using ffmpeg
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-    }]
+    #'postprocessors': [{  # Extract audio using ffmpeg
+    #    'key': 'FFmpegExtractAudio',
+    #    'preferredcodec': 'mp3',
+    #}]
 }
 
 load_dotenv()
@@ -48,8 +48,8 @@ def download_from_playlist(sp, yt, playlist_url):
     
 
 
-link = yt.search_song("Test")
-info = yt.load_info(link)
+link = yt.search_song("Logic top 10")
+info = yt.download_video(link)
 helper_prettify(info)
 
 print(link)

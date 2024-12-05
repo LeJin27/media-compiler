@@ -37,6 +37,10 @@ class YoutubeInterface():
         """
         with YoutubeDL(self.ytdl_opts) as ydl:
             video_json = ydl.download(video_url)
+        
+
+        return video_json
+
 
 
     def load_info(self, video_url):
