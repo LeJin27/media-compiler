@@ -54,6 +54,8 @@ class SpotifyInterface:
         # printing results
         for album in albums:
             print(album['name'])
+
+        
     
 
     def _convert_item_to_track_json(self, item):
