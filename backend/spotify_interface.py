@@ -26,36 +26,6 @@ class SpotifyInterface:
                              client_secret=client_secret,
                              redirect_uri=app_redirect_url,
                              scope="user-library-read"))
-
-    def load_tailor_swift(self):
-        taylor_uri = 'spotify:artist:06HL4z0CvFAxyc27GXpf02'
-        results = self.sp_spotify.artist_albums(taylor_uri, album_type='album')
-        albums = results['items']
-
-        while results['next']:
-            results = self.sp_spotify.next(results)
-            albums.extend(results['items'])
-
-        for album in albums:
-            print(album['name'])
-    
-    def load_albums(self, artist_url):
-        spotify = self.sp_spotify
-
-        #query given artist url 
-        results = spotify.artist_albums(artist_url, album_type='album')
-
-        # parsing url
-        albums = results['items']
-        while results['next']:
-            results = spotify.next(results)
-            albums.extend(results['items'])
-
-        # printing results
-        for album in albums:
-            print(album['name'])
-
-        
     
 
     def _convert_item_to_track_json(self, item):
@@ -87,16 +57,16 @@ class SpotifyInterface:
         return track_json
         
         
-    def load_tracks_from_playlist(self, playlist_id):
+    def load_tracks_from_playlist(self, playlist_url):
         """
         Returns a json datastructure of loaded tracks containing all related meta data
 
         Args:
-            playlist_id (string): Unique identifier for playlist
+            playlist_url (string): Unique identifier for playlist
             return ([json]): A list of tracks metadata 
         """
         spotify = self.sp_spotify
-        results = spotify.playlist_items(playlist_id)
+        results = spotify.playlist_items(playlist_url)
 
 
         loaded_tracks = []

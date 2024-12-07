@@ -52,8 +52,6 @@ class YoutubeInterface():
         
         return video_json
 
-
-
     def load_info(self, video_url):
         """
         Returns all info related to url

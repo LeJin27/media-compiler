@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 import pprint
 import os
 
-def helper_prettify(json_to_prettify):
-    print(pprint.pformat(json_to_prettify, indent=1, width=80))
 
 
 class SpotifyToDatabase():
@@ -21,7 +19,6 @@ class SpotifyToDatabase():
             'format': 'm4a/bestaudio/best',
             'paths': OUTPUT_PATH,
         }
-        self.youtube_interface = YoutubeInterface(YTDL_OPTS)
 
         ### Spotify Interface Setup
 
@@ -30,7 +27,7 @@ class SpotifyToDatabase():
         CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
         APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
 
-        self.spotify_interface = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
+        ### Databse interface setup
 
         USER_DATABASE_NAME = "media_compiler"
         
@@ -46,6 +43,8 @@ class SpotifyToDatabase():
            "youtube_path": "TEXT",
         }
         
+        self.youtube_interface = YoutubeInterface(YTDL_OPTS)
+        self.spotify_interface = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
         self.user_db = DatabaseInterface(host='localhost', dbname=USER_DATABASE_NAME, user='postgres', password='dog', port=5432)
         self.user_db.create_table("songs", schema_json=schema_json)
 
@@ -71,8 +70,6 @@ class SpotifyToDatabase():
             video_json = self.youtube_interface.download_video(track_url)
             track.update(video_json)
             self.user_db.insert_into_table("songs", track)
-
-    
 
 
 dog = SpotifyToDatabase()
