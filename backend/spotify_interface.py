@@ -69,7 +69,7 @@ class SpotifyInterface:
         artists = track['artists'] # a list of artists
 
         track_name = track['name']
-        track_external_url = track['external_urls']
+        track_spotify_url = track['external_urls'].get("spotify")
 
         track_artists = []
 
@@ -80,8 +80,8 @@ class SpotifyInterface:
 
         
         track_json = {"spotify_name": track_name,
+                      "spotify_url": track_spotify_url,
                       "spotify_artists": track_artists,
-                      "spotify_external_urls": track_external_url,
                       "spotify_yt_query": track_yt_query
                       }
         return track_json
