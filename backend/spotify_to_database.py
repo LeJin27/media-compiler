@@ -74,8 +74,8 @@ class SpotifyToDatabase():
     
 
 
-spotData = SpotifyToDatabase()
-spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
+#spotData = SpotifyToDatabase()
+#spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
 
         
 
