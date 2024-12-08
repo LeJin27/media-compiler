@@ -48,7 +48,8 @@ class DatabaseInterface:
       """      
 
       self.connection.autocommit = True 
-      table_schema = ', '.join([f"{col_name} {data_type}" for (col_name, data_type) in schema_json.items()])
+      table_schema = ', '.join(" ".join((col_name, data_type)) for (col_name, data_type) in schema_json.items())
+
       
       try:
          # Dynamically construct the CREATE TABLE SQL query
@@ -82,7 +83,35 @@ class DatabaseInterface:
       except Exception as e: 
          print("Getting tables gone wrong")
          return []
+   
+   
+   def get_items_from_table(self, table_name, dynamic_query = None):
+      """Returns items that match a given query from a table namw
 
+      Args:
+          table_name (string): Table name to get items from
+          dynamic_query (dict, optional): Query with optional filters
+
+      Returns:
+          [dict]: A list of items returned from query 
+      """      
+
+      try: 
+
+         sql_query = f"SELECT * FROM {table_name}"
+
+         if (dynamic_query != None):
+            sql_query += " WHERE "
+            table_schema = ' AND '.join(f"{json_key} = '{json_value}'" for (json_key, json_value) in dynamic_query.items())
+            sql_query += table_schema
+
+         self.cursor.execute(sql_query)
+         items = self.cursor.fetchall()
+         return items
+
+      except Exception as e:
+         print("Error getting items from table")
+         return []
    
    def insert_into_table(self, table_name, row_json):
       """Inserts into table a json item

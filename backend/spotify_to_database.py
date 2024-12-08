@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import pprint
 import os
 
+def helper_prettify(json_to_prettify):
+    print(pprint.pformat(json_to_prettify, indent=1, width=80))
 
 
 class SpotifyToDatabase():
@@ -12,7 +14,7 @@ class SpotifyToDatabase():
     def __init__(self):
         ### Youtube Interface Setup
         OUTPUT_PATH = {
-            'home' : "./music",
+            'home' : "./music"
         }
 
         YTDL_OPTS = {
@@ -29,7 +31,6 @@ class SpotifyToDatabase():
 
         ### Databse interface setup
 
-        USER_DATABASE_NAME = "media_compiler"
         
         schema_json = {
            "spotify_key": "SERIAL PRIMARY KEY", 
@@ -45,8 +46,8 @@ class SpotifyToDatabase():
         
         self.youtube_interface = YoutubeInterface(YTDL_OPTS)
         self.spotify_interface = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
-        self.user_db = DatabaseInterface(host='localhost', dbname=USER_DATABASE_NAME, user='postgres', password='dog', port=5432)
-        self.user_db.create_table("songs", schema_json=schema_json)
+        self.user_db = DatabaseInterface(host=os.environ.get("PG_HOST"), dbname=os.environ.get("PG_DBNAME"), user=os.environ.get("PG_USER"), password=os.environ.get("PG_PASSWORD"), port=os.environ.get("PG_PORT"))
+        self.user_db.create_table(os.environ.get("PG_TABLE_NAME"), schema_json=schema_json)
 
 
     def download_from_playlist(self, playlist_url):
@@ -69,11 +70,12 @@ class SpotifyToDatabase():
             track_url = self.youtube_interface.search_song(track_yt_query)
             video_json = self.youtube_interface.download_video(track_url)
             track.update(video_json)
-            self.user_db.insert_into_table("songs", track)
+            self.user_db.insert_into_table(os.environ.get("PG_TABLE_NAME"), track)
+    
 
 
-dog = SpotifyToDatabase()
-dog.download_from_playlist("https://open.spotify.com/playlist/0uvCh1FFthdzbXWiYY9un4?si=56642463ea4443c0")
+spotData = SpotifyToDatabase()
+spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
 
         
 
