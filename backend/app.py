@@ -1,14 +1,14 @@
 from spotify_to_database import SpotifyToDatabase
 from spotify_interface import SpotifyInterface
 from youtube_interface import YoutubeInterface
-from database_interface import DatabaseInterface
+from backend.database_interface_pg import DatabaseInterfacePg
 
 
-def helper_prettify(json_to_prettify):
-    print(pprint.pformat(json_to_prettify, indent=1, width=80))
 
-spotData = SpotifyToDatabase()
+import sqlite3
 
-
+con = sqlite3.connect("tutorial.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS movie(title, year, score)")
 
 

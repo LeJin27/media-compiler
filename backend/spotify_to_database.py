@@ -1,6 +1,7 @@
 from spotify_interface import SpotifyInterface
 from youtube_interface import YoutubeInterface
-from database_interface import DatabaseInterface
+from database_interface_pg import DatabaseInterfacePg
+from database_interface_sqlite import DatabaseInterfaceSqlite
 from dotenv import load_dotenv
 import pprint
 import os
@@ -11,7 +12,7 @@ def helper_prettify(json_to_prettify):
 
 class SpotifyToDatabase():
 
-    def __init__(self):
+    def __init__(self, db_interface):
         ### Youtube Interface Setup
         OUTPUT_PATH = {
             'home' : "./music"
@@ -30,24 +31,10 @@ class SpotifyToDatabase():
         APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
 
         ### Databse interface setup
-
-        
-        schema_json = {
-           "spotify_key": "SERIAL PRIMARY KEY", 
-           "spotify_url" : "TEXT",
-           "spotify_name": "VARCHAR(255)",
-           "spotify_artists": "VARCHAR(255)[]", 
-           "spotify_yt_query": "TEXT", 
-           "youtube_url": "TEXT",
-           "youtube_name": "VARCHAR(255)",
-           "youtube_length": "NUMERIC",
-           "youtube_path": "TEXT",
-        }
+        self.user_db = db_interface
         
         self.youtube_interface = YoutubeInterface(YTDL_OPTS)
         self.spotify_interface = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
-        self.user_db = DatabaseInterface(host=os.environ.get("PG_HOST"), dbname=os.environ.get("PG_DBNAME"), user=os.environ.get("PG_USER"), password=os.environ.get("PG_PASSWORD"), port=os.environ.get("PG_PORT"))
-        self.user_db.create_table(os.environ.get("PG_TABLE_NAME"), schema_json=schema_json)
 
 
     def download_from_playlist(self, playlist_url):
@@ -70,12 +57,55 @@ class SpotifyToDatabase():
             track_url = self.youtube_interface.search_song(track_yt_query)
             video_json = self.youtube_interface.download_video(track_url)
             track.update(video_json)
-            self.user_db.insert_into_table(os.environ.get("PG_TABLE_NAME"), track)
+            self.user_db.insert_into_table("songs", track)
     
 
 
-#spotData = SpotifyToDatabase()
-#spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
+
+
+def postgres():
+    pg_db = DatabaseInterfacePg(host="localhost", dbname="songs", user="postgres", password="dog", port=5432)
+    pg_schema_json = {
+       "spotify_key": "SERIAL PRIMARY KEY", 
+       "spotify_url" : "TEXT",
+       "spotify_name": "VARCHAR(255)",
+       "spotify_artists": "VARCHAR(255)[]", 
+       "spotify_yt_query": "TEXT", 
+       "youtube_url": "TEXT",
+       "youtube_name": "VARCHAR(255)",
+       "youtube_length": "NUMERIC",
+       "youtube_path": "TEXT",
+    }
+    pg_db.create_table("songs", schema_json=pg_schema_json)
+    spotData = SpotifyToDatabase(pg_db)
+    spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
+
+
+def sqlite():
+    sqlite_db = DatabaseInterfaceSqlite("songs")
+    sqlite_json_schema = {
+       "spotify_key": "INTEGER PRIMARY KEY", 
+       "spotify_url" : "TEXT",
+       "spotify_name": "TEXT",
+       "spotify_artists": "TEXT", 
+       "spotify_yt_query": "TEXT", 
+       "youtube_url": "TEXT",
+       "youtube_name": "TEXT",
+       "youtube_length": "INTEGER",
+       "youtube_path": "TEXT",
+    }
+    sqlite_db.create_table("songs", sqlite_json_schema)
+
+    spotData = SpotifyToDatabase(sqlite_db)
+    spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
+
+sqlite()
+
+
+
+
+
+
 
         
 

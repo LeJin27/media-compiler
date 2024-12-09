@@ -1,7 +1,10 @@
 
+from dotenv import load_dotenv
+import pprint
+import os
 import psycopg2
 
-class DatabaseInterface:
+class DatabaseInterfacePg:
    def __init__(self, host, dbname, user, password, port):
       self.dbname = dbname
       self.user = user
@@ -63,27 +66,6 @@ class DatabaseInterface:
          print(f"Table {table_name} created successfully.")
       except Exception as e:
         print(f"An error occurred: {e}")
-
-   def get_tables(self):
-      """Returns tables
-
-      Returns:
-          list: List of tables 
-      """      
-      try:
-         sql_query = f"""
-         SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema='public'
-            AND table_type='BASE TABLE';
-         """
-         self.cursor.execute(sql_query)
-         tables = [row[0] for row in self.cursor.fetchall()]
-         return tables
-      except Exception as e: 
-         print("Getting tables gone wrong")
-         return []
-   
    
    def get_items_from_table(self, table_name, dynamic_query = None):
       """Returns items that match a given query from a table namw
@@ -137,7 +119,7 @@ class DatabaseInterface:
          self.cursor.execute(sql_query, json_values)
                            
       except Exception as e:
-         print("Insertion gone wrong")
+         print("Insertion gone wrong {e}", e)
 
 
 
@@ -146,5 +128,6 @@ class DatabaseInterface:
 
 
 
+#pg_db = DatabaseInterface(host="localhost", dbname="songs", user="postgres", password="dog", port=os.environ.get("PG_PORT"))
   
   
