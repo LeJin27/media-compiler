@@ -22,7 +22,6 @@ class SpotifyToDatabase():
             'format': 'm4a/bestaudio/best',
             'paths': OUTPUT_PATH,
         }
-
         ### Spotify Interface Setup
 
         load_dotenv()
@@ -30,9 +29,7 @@ class SpotifyToDatabase():
         CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
         APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
 
-        ### Databse interface setup
         self.user_db = db_interface
-        
         self.youtube_interface = YoutubeInterface(YTDL_OPTS)
         self.spotify_interface = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
 
@@ -63,43 +60,7 @@ class SpotifyToDatabase():
 
 
 
-def postgres():
-    pg_db = DatabaseInterfacePg(host="localhost", dbname="songs", user="postgres", password="dog", port=5432)
-    pg_schema_json = {
-       "spotify_key": "SERIAL PRIMARY KEY", 
-       "spotify_url" : "TEXT",
-       "spotify_name": "VARCHAR(255)",
-       "spotify_artists": "VARCHAR(255)[]", 
-       "spotify_yt_query": "TEXT", 
-       "youtube_url": "TEXT",
-       "youtube_name": "VARCHAR(255)",
-       "youtube_length": "NUMERIC",
-       "youtube_path": "TEXT",
-    }
-    pg_db.create_table("songs", schema_json=pg_schema_json)
-    spotData = SpotifyToDatabase(pg_db)
-    spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
 
-
-def sqlite():
-    sqlite_db = DatabaseInterfaceSqlite("songs")
-    sqlite_json_schema = {
-       "spotify_key": "INTEGER PRIMARY KEY", 
-       "spotify_url" : "TEXT",
-       "spotify_name": "TEXT",
-       "spotify_artists": "TEXT", 
-       "spotify_yt_query": "TEXT", 
-       "youtube_url": "TEXT",
-       "youtube_name": "TEXT",
-       "youtube_length": "INTEGER",
-       "youtube_path": "TEXT",
-    }
-    sqlite_db.create_table("songs", sqlite_json_schema)
-
-    spotData = SpotifyToDatabase(sqlite_db)
-    spotData.download_from_playlist("https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
-
-sqlite()
 
 
 

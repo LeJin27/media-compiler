@@ -15,7 +15,6 @@ class DatabaseInterfaceSqlite:
             schema_json (dict): Dict containing schema columns and their types
         """      
         table_schema = ', '.join(" ".join((col_name, data_type)) for (col_name, data_type) in schema_json.items())
-        print(table_schema)
         try:
             # Dynamically construct the CREATE TABLE SQL query
             sql_query = f"""
