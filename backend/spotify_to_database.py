@@ -32,6 +32,7 @@ class SpotifyToDatabase():
         self.user_db = db_interface
         self.youtube_interface = YoutubeInterface(YTDL_OPTS)
         self.spotify_interface = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
+    
 
 
     def download_from_playlist(self, playlist_url):

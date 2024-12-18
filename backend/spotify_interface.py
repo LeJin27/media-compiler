@@ -35,19 +35,30 @@ class SpotifyInterface:
         Args:
             item (string): An item from a query from playlist_items
         """
-        track = item['track']
-        artists = track['artists'] # a list of artists
+        
+        track = item.get('track')
+        if not track: 
+            return None
+        
 
-        track_name = track['name']
-        track_spotify_url = track['external_urls'].get("spotify")
+        artists = track.get('artists', [])
+        track_name = track.get('name', "Unknown Track") 
+        track_spotify_url = track.get('external_urls', {}).get("spotify", "Unknown URL")
 
         track_artists = []
 
         track_yt_query = track_name
+        track_yt_query += " by"
+
+
+
         for artist in artists: 
             track_artists.append(artist['name'])
             track_yt_query += " " + artist['name']
-
+        
+        if (len(artists) == 0): 
+            track_yt_query = track_name
+        
         
         track_json = {"spotify_name": track_name,
                       "spotify_url": track_spotify_url,
@@ -76,6 +87,14 @@ class SpotifyInterface:
         
         return loaded_tracks
     
+
+#CLIENT_ID = os.environ.get("CLIENT_ID")
+#CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+#APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
+#
+#meow = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
+#meow.load_tracks_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=K9IbtnKYQz2aUfOMOM4Dng")
+
 
 
 

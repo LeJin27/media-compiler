@@ -6,26 +6,7 @@ from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 from pydantic import create_model
 from typing import Optional, List
-
-
-def postgres():
-    pg_db = DatabaseInterfacePg(
-        host="localhost", dbname="songs", user="postgres", password="dog", port=5432)
-    pg_schema_json = {
-        "spotify_key": "SERIAL PRIMARY KEY",
-        "spotify_url": "TEXT",
-        "spotify_name": "VARCHAR(255)",
-        "spotify_artists": "VARCHAR(255)[]",
-        "spotify_yt_query": "TEXT",
-        "youtube_url": "TEXT",
-        "youtube_name": "VARCHAR(255)",
-        "youtube_length": "NUMERIC",
-        "youtube_path": "TEXT",
-    }
-    pg_db.create_table("songs", schema_json=pg_schema_json)
-    spot_data = SpotifyToDatabase(pg_db)
-    spot_data.download_from_playlist(
-        "https://open.spotify.com/playlist/3EL0PRZNjtWmFFLXiAgb2b?si=5560SJQcTPGDZHEtO4KViw")
+from fastapi.middleware.cors import CORSMiddleware
 
 
 class song_base(BaseModel):
@@ -63,26 +44,35 @@ sqlite_json_schema = {
 }
 sqlite_db.create_table("songs", sqlite_json_schema)
 spot_data = SpotifyToDatabase(sqlite_db)
+#spot_data.download_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=e9823f3ebb7d439e")
 
 app = FastAPI()
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def _filter_dict_valid_key(dict):
     filtered_dict = {k: v for k, v in dict.items() if v is not None}
     return filtered_dict
 
-
 @app.get("/songs/")
 async def read_items(params: song_base = Depends()):
     # remove none values in song_base and convert to dictioanry
     params_dict = params.model_dump()
+    print(f"Received params: {params_dict}")  # Logs incoming parameters
     filtered_params = _filter_dict_valid_key(params_dict)
 
     all_songs = sqlite_db.get_items_from_table("songs", filtered_params)
     models = convert_dict_list_to_models(all_songs)
 
     return models
-
-
-
 

@@ -1,6 +1,4 @@
-
 import sqlite3
-import psycopg2
 
 
 class DatabaseInterfaceSqlite:
@@ -64,6 +62,48 @@ class DatabaseInterfaceSqlite:
             print("Error getting items from table")
             return []
 
+    def update_table(self, table_name, key_json = None, row_json = None):
+        """Updates database at given key with updated row 
+
+        Args:
+            table_name (string): Name of table 
+            key_json (dict): What databse entries will be updated
+            row_json (dict): New  updated values 
+        """        
+
+        updated_parameters = ', '.join(" = ".join((key, "'" + str(value) + "'")) 
+                              for (key, value) in row_json.items())
+        
+        update_index = ' AND '.join(" = ".join((key, "'" + str(value) + "'")) 
+                              for (key, value) in key_json.items())
+
+        try:
+            sql_query = f"""
+                        UPDATE {table_name}
+                        SET {updated_parameters}
+
+                        WHERE {update_index}
+                            
+                        """
+            self.cursor.execute(sql_query)
+            self.connection.commit()  # Make sure changes are saved to the database
+
+        except Exception as e:
+            print("update gone wrong {e}", e)
+    
+    def clear_table(self, table_name):
+        try:
+            sql_query = f"""
+                        DELETE FROM {table_name}
+                        """
+            self.cursor.execute(sql_query)
+            self.connection.commit()  # Make sure changes are saved to the database
+
+        except Exception as e:
+            print("Insertion gone wrong {e}", e)
+
+        
+
     def insert_into_table(self, table_name, row_json):
         """Inserts into table a json item
 
@@ -71,12 +111,16 @@ class DatabaseInterfaceSqlite:
             table_name (string): Name of table
             row_json (dict): A dict containing keys and values of insertion
         """
+
+        # handles multiple artists list
         for key, value in row_json.items():
             if isinstance(value, list):
                 row_json[key] = ', '.join(value)
+        
 
         json_keys = list(row_json.keys())
         json_values = list(row_json.values())
+
 
         # Generate placeholders %s, %s, %s, %s
         value_placeholders = ', '.join(['?'] * len(json_keys))
