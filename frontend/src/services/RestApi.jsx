@@ -16,3 +16,15 @@ export const readSongs = async(dictionaryArg) => {
     }
 
 }
+
+export const readMusic = async() => {
+    try {
+        const response = await axios.get(baseURL + '/music/Signs Of Love [tTu-Uhlu4RU].m4a', {
+            responseType: 'blob',
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching songs:', error);
+        throw error;
+    }
+}

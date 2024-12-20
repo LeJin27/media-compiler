@@ -3,10 +3,12 @@ from database_interface_pg import DatabaseInterfacePg
 from database_interface_sqlite import DatabaseInterfaceSqlite
 from spotify_interface import helper_prettify
 from fastapi import FastAPI, Depends, UploadFile, File
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from pydantic import create_model
 from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 
 class song_base(BaseModel):
@@ -18,7 +20,7 @@ class song_base(BaseModel):
     youtube_url: Optional[str] = None
     youtube_name: Optional[str] = None
     youtube_length: Optional[int] = None
-    youtube_path: Optional[str] = None
+    youtube_file_name: Optional[str] = None
 
 def convert_dict_list_to_models(dict_list: List[dict]) -> List[song_base]:
     """
@@ -40,7 +42,7 @@ sqlite_json_schema = {
     "youtube_url": "TEXT",
     "youtube_name": "TEXT",
     "youtube_length": "INTEGER",
-    "youtube_path": "TEXT",
+    "youtube_file_name": "TEXT",
 }
 sqlite_db.create_table("songs", sqlite_json_schema)
 spot_data = SpotifyToDatabase(sqlite_db)
@@ -78,7 +80,19 @@ async def read_items(params: song_base = Depends()):
 
 
 
-@app.get("/audio")
-async def read_audio():
-    audio_path = "./music/Persona 5 OST 04 - Life Will Change "  # Replace with the actual path to your audio file
-    return FileResponse(audio_path, media_type="audio/mpeg")
+
+"""
+@app.get("/audio/{item_id}")
+def get_audio(item_id: str):
+    song_dict = sqlite_db.get_items_from_table("songs", {"spotify_key": item_id})[0]
+    song_path = song_dict.get("youtube_path")
+    return FileResponse(song_path, media_type="audio/mp4", filename="audio.mp4")
+"""
+
+
+app.mount("/music", StaticFiles(directory="music"), name="music")
+
+@app.get("/music/{filename}", summary="Get a music file", description="Retrieve a specific music file by its filename.")
+async def get_music_file(filename: str):
+    file_path = f"/music/{filename}"
+    return FileResponse(file_path)

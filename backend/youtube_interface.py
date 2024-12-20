@@ -1,6 +1,8 @@
 from youtube_search import YoutubeSearch
 import pprint
 from yt_dlp import YoutubeDL
+import os
+
 
 
 def helper_prettify(json_to_prettify):
@@ -42,12 +44,13 @@ class YoutubeInterface():
         with YoutubeDL(self.ytdl_opts) as ydl:
             video_json = ydl.extract_info(video_url, download=True)
             file_path = ydl.prepare_filename(video_json)
+            file_name = os.path.basename(file_path)
 
             video_json = {
                 "youtube_length": video_json['duration'], # gets lenght of video
                 "youtube_name": video_json['fulltitle'],
                 "youtube_url": video_json['original_url'],
-                "youtube_path" : file_path
+                "youtube_file_name" : file_name
             }
         
         return video_json

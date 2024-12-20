@@ -3,7 +3,8 @@ import sqlite3
 
 class DatabaseInterfaceSqlite:
     def __init__(self, dbname):
-        self.connection = sqlite3.connect("songs.db")
+        # for some reason you get thread error without it
+        self.connection = sqlite3.connect("songs.db", check_same_thread=False)
         self.cursor = self.connection.cursor()
 
     def create_table(self, table_name, schema_json):
@@ -59,7 +60,7 @@ class DatabaseInterfaceSqlite:
             return items
 
         except Exception as e:
-            print("Error getting items from table")
+            print(f"Error getting items from table {e}", e)
             return []
 
     def update_table(self, table_name, key_json = None, row_json = None):

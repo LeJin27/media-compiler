@@ -19,7 +19,7 @@ class song_base(BaseModel):
     youtube_url: Optional[str] = None
     youtube_name: Optional[str] = None
     youtube_length: Optional[int] = None
-    youtube_path: Optional[str] = None
+    youtube_file_name: Optional[str] = None
 
 def convert_dict_list_to_models(dict_list: List[dict]) -> List[song_base]:
     """
@@ -41,8 +41,9 @@ sqlite_json_schema = {
     "youtube_url": "TEXT",
     "youtube_name": "TEXT",
     "youtube_length": "INTEGER",
-    "youtube_path": "TEXT",
+    "youtube_file_name": "TEXT",
 }
 sqlite_db.create_table("songs", sqlite_json_schema)
 spot_data = SpotifyToDatabase(sqlite_db)
+#spot_data.download_from_playlist("https://open.spotify.com/playlist/0uvCh1FFthdzbXWiYY9un4?si=5d2eda36d18d4d2a")
 helper_prettify(sqlite_db.get_items_from_table("songs"))
