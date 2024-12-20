@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { readMusic } from "../services/RestApi";
+import AudioHeader from "./AudioHeader";
 
 const AudioPlayer = () => {
   const [audioUrl, setAudioUrl] = useState("");
@@ -17,13 +18,14 @@ const AudioPlayer = () => {
 
   return (
     <div>
-      <button onClick={fetchAudio}>Load Audio</button>
-      {audioUrl && (
-        <audio controls>
-          <source src={audioUrl} type="audio/mp4" />
-          Your browser does not support the audio tag.
-        </audio>
-      )}
+      <div className="flex-col">
+        <AudioHeader/>
+
+
+
+
+      </div>
+
     </div>
   );
 };

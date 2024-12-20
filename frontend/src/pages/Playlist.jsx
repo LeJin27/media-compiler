@@ -19,7 +19,7 @@ const Playlist = () => {
 
   return (
       <div className='flex-col'>
-        <AudioPlayer></AudioPlayer>
+        <AudioPlayer/>
         {songsInPlaylist.map(song => 
           <h2 className = "bg-slate-400 m-1" key = {song.spotify_key}>
             {song.youtube_file_name}
