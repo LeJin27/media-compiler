@@ -1,0 +1,41 @@
+.persona-box-skew {
+    transform: skew(-10deg);
+
+}
+
+.persona-box {
+    display: flex;
+    position: relative;
+    background-color: black;
+    color: white;
+    padding: 5px;
+    min-width: 500px;
+
+}
+
+.persona-box::before {
+    bottom: -5px;
+    right: -5px;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%; 
+    background-color: white;
+    z-index: -1;
+}
+.persona-box::after {
+    top: -5px;
+    left: -5px;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%; 
+    background-color: #3ECAFF;
+    z-index: -1;
+}
+
+
+.scroll-div {
+    overflow: hidden;
+    overflow-y: scroll;
+}

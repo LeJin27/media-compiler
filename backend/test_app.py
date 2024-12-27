@@ -45,5 +45,5 @@ sqlite_json_schema = {
 }
 sqlite_db.create_table("songs", sqlite_json_schema)
 spot_data = SpotifyToDatabase(sqlite_db)
-#spot_data.download_from_playlist("https://open.spotify.com/playlist/0uvCh1FFthdzbXWiYY9un4?si=5d2eda36d18d4d2a")
+spot_data.download_from_playlist("https://open.spotify.com/playlist/1Rbuu3tvkRQwXFth8qf5BZ?si=wjhzM4Y0QW-TsWP2RVUqJQ")
 helper_prettify(sqlite_db.get_items_from_table("songs"))

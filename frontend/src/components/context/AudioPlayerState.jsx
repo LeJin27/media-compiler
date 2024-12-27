@@ -6,32 +6,58 @@ import { readSongs } from '../../services/RestApi';
 
 const AudioPlayerState = (props) => {
     const intitialState = {
-        currentSong: 0,
+        currentSongId: 0,
         songsList: [],
         songIsPlaying: false,
         audio: null,
     }
 
-    const [currentState, dispatch] = useReducer(AudioPlayerReducer, intitialState)
+    const [state, dispatch] = useReducer(AudioPlayerReducer, intitialState)
 
-    const handleReadSongsToContext = async (query) => {
+    const handleSetSongsFromDatabase = async (query) => {
         const fetchedLists = await readSongs(query);
         dispatch({ type: 'SET_SONGS_LIST', data: fetchedLists });
     }
 
+
     useEffect(() => {
-        handleReadSongsToContext()
+        handleSetSongsFromDatabase()
     }, []); 
 
-    const setCurrentSong = (id) => dispatch({type: 'SET_CURRENT_SONG', data: id})
+    const setCurrentSongId = (id) => dispatch({type: 'SET_CURRENT_SONG', data: id})
+
+    const setPlayingStatus = (playingStatus) =>
+        dispatch({type: 'SET_PLAYING_STATUS', data: playingStatus})
+
+    const setPause = () =>
+        dispatch({type: 'SET_PLAYING_STATUS', data: true})
+
+    const nextSong = () => {
+        if (state.currentSongId === state.songsList.length - 1) {
+            setCurrentSongId(0)
+        } else {
+            setCurrentSongId(state.currentSongId + 1)
+        }
+    }
+    const prevSong = () => {
+        if (state.currentSongId === 0) {
+            setCurrentSongId(state.songsList.length - 1)
+        } else {
+            setCurrentSongId(state.currentSongId - 1)
+        }
+    }
+
 
     return <AudioPlayerContext.Provider
         value = {{
-            currentSong: currentState.currentSong,
-            songsList: currentState.songsList,
-            songIsPlaying: currentState.songIsPlaying,
-            audio: currentState.audio,
-            setCurrentSong
+            currentSongId: state.currentSongId,
+            songsList: state.songsList,
+            songIsPlaying: state.songIsPlaying,
+            setCurrentSongId,
+            setPause,
+            setPlayingStatus,
+            prevSong,
+            nextSong
         }}
     >
         {props.children}

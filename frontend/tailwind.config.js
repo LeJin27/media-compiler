@@ -6,6 +6,12 @@ export default {
   ],
   theme: {
     extend: {},
+    colors: {
+      '_primary': '#ffffff',
+      '_secondary': '#3f3cbb',
+      '_control-bar': '#3f3cbb',
+
+    }
   },
   plugins: [],
 }

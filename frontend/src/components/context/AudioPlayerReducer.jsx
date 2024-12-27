@@ -8,10 +8,9 @@ let AudioPlayerReducer = (state, action)  => {
         case 'SET_CURRENT_SONG':
             return {
                 ...state,
-                currentSong: action.data,
-                songIsPlaying: true
+                currentSongId: action.data,
             }
-        case 'TOGGLE_PLAYING': 
+        case 'SET_PLAYING_STATUS': 
             return {
                 ...state, 
                 songIsPlaying: action.data

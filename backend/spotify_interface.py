@@ -88,12 +88,14 @@ class SpotifyInterface:
         return loaded_tracks
     
 
+#load_dotenv()
 #CLIENT_ID = os.environ.get("CLIENT_ID")
 #CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 #APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
 #
 #meow = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
-#meow.load_tracks_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=K9IbtnKYQz2aUfOMOM4Dng")
+#tracks = meow.load_tracks_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=K9IbtnKYQz2aUfOMOM4Dng")
+#helper_prettify(tracks)
 
 
 
