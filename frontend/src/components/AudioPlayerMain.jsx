@@ -11,7 +11,7 @@ const AudioPlayerMain = () => {
             <AudioPlayerState>
                 <AudioHeader/>
                 <AudioPlaylist />
-                 <AudioControls/>
+                <AudioControls/>
             </AudioPlayerState>
         </div>
     );

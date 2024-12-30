@@ -14,8 +14,11 @@ input[type=range][orient=vertical] {
     vertical-align: bottom;
 }
 
-.carbon-fibre {
+.carbonfibre {
 
-    background-color: #131313;
-    background-size: 20px 20px;
+    background-color: #1e1e2f; /* Replace with your desired background color */
+    background-image: radial-gradient(#888 0.2px, transparent 1px),
+                      radial-gradient(#888 0.2px, transparent 1px);
+    background-size: 6px 6px; /* Adjust spacing between dots */
+    background-position: 0 0, 3px 3px; /* Adjust offset for the grid pattern */
 }

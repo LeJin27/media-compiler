@@ -4,6 +4,7 @@ import AudioPlayerContext from '../context/AudioPlayerContext'
 import { readMusic } from '../../services/RestApi'
 import styles from './AudioControls.module.css';
 import { BiSkipNext,BiSkipPrevious,BiPlayCircle,BiPauseCircle } from "react-icons/bi";
+import { HiMiniSpeakerWave } from "react-icons/hi2";
 
 
 const AudioControls = ()  => {
@@ -64,6 +65,8 @@ const AudioControls = ()  => {
         progressBarRef.current.value = audioRef.current.currentTime;
         setStateCurrentTime(progressBarRef.current.value);
         animationRef.current = requestAnimationFrame(helperWhilePlaying)
+
+
     }
 
     const helperOnLoadedMetaData = () => {
@@ -94,6 +97,9 @@ const AudioControls = ()  => {
         return returnedTime
     }
 
+    const handleAudioEnd = () => {
+        handleNextSong()
+    }
 
     // use effect for progress bar
 
@@ -122,21 +128,25 @@ const AudioControls = ()  => {
     }, [currentSongId, songsList]);
 
 
-    return <div className='flex-col bg-_control-bar fixed flex-1 w-full bottom-0'>
+    return <div className={` flex-col fixed flex-1 w-full bottom-0 ${styles.carbonfibre} text-white border-2 border-white p-3`}>
         <audio 
             ref = {audioRef}
             onLoadedMetadata={helperOnLoadedMetaData}
             type= "audio/mpeg"
             preload = "true"
             src = {stateAudioSource}
+            onEnded={handleAudioEnd}
         />
 
         {/*Progress Bar*/}
         <div className ="flex justify-between">
+            <div className = "flex-col text-left ">
+                <div className='start'>{songsList[currentSongId]?.spotify_name}</div>
+                <div className='text-xs'>{songsList[currentSongId]?.spotify_artists}</div>
+            </div>
 
 
             <div className='flex-col'>
-                <div>Now playing: {songsList[currentSongId]?.spotify_name}</div>
                 {/*Pause component*/}
 
                 <div className='flex justify-center'>
@@ -180,12 +190,19 @@ const AudioControls = ()  => {
                 </div>
             </div>
 
-            <input
-                className='min-w-56'
-                value={Math.round(stateVolume * 100)}
-                type="range"
-                onChange={(e) => handleVolume(e.target.value / 100)}>
-            </input>
+
+
+            <div className='flex items-center gap-4'>
+                <HiMiniSpeakerWave  size = {25}/>
+
+
+                <input
+                    className=''
+                    value={Math.round(stateVolume * 100)}
+                    type="range"
+                    onChange={(e) => handleVolume(e.target.value / 100)}>
+                </input>
+            </div>
         </div>
 
 

@@ -1,9 +1,9 @@
-.persona-box-skew {
+.personaboxskew {
     transform: skew(-10deg);
 
 }
 
-.persona-box {
+.personabox {
     display: flex;
     position: relative;
     background-color: black;
@@ -13,7 +13,7 @@
 
 }
 
-.persona-box::before {
+.personabox::before {
     bottom: -5px;
     right: -5px;
     content: "";
@@ -23,7 +23,7 @@
     background-color: white;
     z-index: -1;
 }
-.persona-box::after {
+.personabox::after {
     top: -5px;
     left: -5px;
     content: "";
@@ -35,7 +35,7 @@
 }
 
 
-.scroll-div {
+.scrolldiv {
     overflow: hidden;
     overflow-y: scroll;
 }
