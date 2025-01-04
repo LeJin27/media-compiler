@@ -18,6 +18,9 @@ const RouterHeader = () => {
             <li>
               <Link to="/playlist">Playlist</Link>
             </li>
+            <li>
+              <Link to="/playlistgroup">PlaylistGorup</Link>
+            </li>
           </ul>
         </nav>
       </div>{" "}

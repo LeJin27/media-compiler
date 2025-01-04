@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scrolldiv {
+    flex-grow: 1;
+    overflow: hidden;
+    overflow-y: scroll;
+}

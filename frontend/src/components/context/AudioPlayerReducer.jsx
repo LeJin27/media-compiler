@@ -15,6 +15,16 @@ let AudioPlayerReducer = (state, action)  => {
                 ...state, 
                 songIsPlaying: action.data
             }
+        case 'SET_PLAYLISTS': 
+            return {
+                ...state, 
+                playlists: action.data
+            }
+        case 'SET_CURRENT_PLAYLIST':
+            return {
+                ...state,
+                currentPlaylist: action.data,
+            }
         default:
             return state
     }

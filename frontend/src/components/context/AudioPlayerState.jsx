@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useReducer} from 'react'
 import AudioPlayerReducer from './AudioPlayerReducer';
 import AudioPlayerContext from './AudioPlayerContext';
-import { readSongs } from '../../services/RestApi';
+import { readPlaylists, readSongs } from '../../services/RestApi';
 
 
 const AudioPlayerState = (props) => {
@@ -10,21 +10,47 @@ const AudioPlayerState = (props) => {
         songsList: [],
         songIsPlaying: false,
         audio: null,
+        playlists: [],
+        currentPlaylist: ""
+        
+    }
+
+    const handleReadPlaylists = async() => {
+        const fetchedPlayLists = await readPlaylists()
+        dispatch({ type: 'SET_PLAYLISTS', data: fetchedPlayLists });
     }
 
     const [state, dispatch] = useReducer(AudioPlayerReducer, intitialState)
 
-    const handleSetSongsFromDatabase = async (query) => {
+    const handleSongsFromDatabase = async (query) => {
         const fetchedLists = await readSongs(query);
         dispatch({ type: 'SET_SONGS_LIST', data: fetchedLists });
     }
 
+    const setSongsList = (playlistName) => {
+        if (state.currentPlaylist === "") {
+            handleSongsFromDatabase()
+        } else {
+            handleSongsFromDatabase({"spotify_playlist" : playlistName})
+        }
+    }
+
+
+
+
 
     useEffect(() => {
-        handleSetSongsFromDatabase()
+        setSongsList()
+        handleReadPlaylists()
     }, []); 
 
     const setCurrentSongId = (id) => dispatch({type: 'SET_CURRENT_SONG', data: id})
+
+    const setPlaylists = (playlistsArg) =>
+        dispatch({type: 'SET_PLAYLISTS', data: playlistsArg})
+
+    const setCurrentPlaylist = (playlistArg) =>
+        dispatch({type: 'SET_CURRENT_PLAYLIST', data: playlistArg})
 
     const setPlayingStatus = (playingStatus) =>
         dispatch({type: 'SET_PLAYING_STATUS', data: playingStatus})
@@ -57,7 +83,12 @@ const AudioPlayerState = (props) => {
             setPause,
             setPlayingStatus,
             prevSong,
-            nextSong
+            nextSong,
+            playlists: state.playlists,
+            currentPlaylist : state.currentPlaylist,
+            setCurrentPlaylist, 
+            currentPlaylist: state.currentPlaylist,
+            setSongsList
         }}
     >
         {props.children}

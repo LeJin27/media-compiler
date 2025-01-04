@@ -8,11 +8,9 @@ import AudioControls from "./AudioControls/AudioControls";
 const AudioPlayerMain = () => {
     return (
         <div className="relative">
-            <AudioPlayerState>
                 <AudioHeader/>
                 <AudioPlaylist />
                 <AudioControls/>
-            </AudioPlayerState>
         </div>
     );
 };

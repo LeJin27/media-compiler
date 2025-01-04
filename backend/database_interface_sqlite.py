@@ -29,6 +29,26 @@ class DatabaseInterfaceSqlite:
             print(f"Table {table_name} created successfully.")
         except Exception as e:
             print(f"An error occurred: {e}")
+    
+    def get_all_unique(self, table_name, unique_column_name):
+        try:
+            # Dynamically construct the CREATE TABLE SQL query
+            sql_query = f"""
+                SELECT DISTINCT {unique_column_name}
+                from {table_name};
+            
+            """
+            # Execute the query
+            self.cursor.execute(sql_query)
+            items = self.cursor.fetchall()
+            no_tuple = [row[0] for row in items]
+            return no_tuple
+            
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
+
+
 
     def get_items_from_table(self, table_name, dynamic_query=None):
         """Returns items that match a given query from a table namw
@@ -141,20 +161,10 @@ class DatabaseInterfaceSqlite:
         except Exception as e:
             print("Insertion gone wrong {e}", e)
 
-# dog = DatabaseInterfaceSqlite("songs")
-#
-# json_schema = {
-#   "spotify_key": "INTEGER PRIMARY KEY",
-#   "spotify_url" : "TEXT",
-#   "spotify_name": "TEXT",
-#   "spotify_yt_query": "TEXT",
-#   "youtube_url": "TEXT",
-#   "youtube_name": "TEXT",
-#   "youtube_length": "INTEGER",
-#   "youtube_path": "TEXT",
-# }
-# dog.create_table("songs", json_schema)
-#
-#
-#
-# print(dog.get_tables())
+#dog = DatabaseInterfaceSqlite("songs")
+#print(dog.get_all_unique("songs", "spotify_playlist"))
+
+
+
+
+

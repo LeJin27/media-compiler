@@ -17,10 +17,12 @@ class song_base(BaseModel):
     spotify_name: Optional[str] = None
     spotify_artists: Optional[str] = None
     spotify_yt_query: Optional[str] = None
+    spotify_playlist: Optional[str] = None
     youtube_url: Optional[str] = None
     youtube_name: Optional[str] = None
     youtube_length: Optional[int] = None
     youtube_file_name: Optional[str] = None
+
 
 def convert_dict_list_to_models(dict_list: List[dict]) -> List[song_base]:
     """
@@ -39,6 +41,7 @@ sqlite_json_schema = {
     "spotify_name": "TEXT",
     "spotify_artists": "TEXT",
     "spotify_yt_query": "TEXT",
+    "spotify_playlist": "TEXT",
     "youtube_url": "TEXT",
     "youtube_name": "TEXT",
     "youtube_length": "INTEGER",
@@ -46,7 +49,7 @@ sqlite_json_schema = {
 }
 sqlite_db.create_table("songs", sqlite_json_schema)
 spot_data = SpotifyToDatabase(sqlite_db)
-#spot_data.download_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=e9823f3ebb7d439e")
+#spot_data.download_from_playlist("https://open.spotify.com/playlist/1Rbuu3tvkRQwXFth8qf5BZ?si=8e9fecb805464977")
 
 app = FastAPI()
 origins = [
@@ -77,6 +80,12 @@ async def read_items(params: song_base = Depends()):
     models = convert_dict_list_to_models(all_songs)
 
     return models
+
+@app.get("/playlists/")
+async def read_playlists():
+    # remove none values in song_base and convert to dictioanry
+    all_unique_playlists = sqlite_db.get_all_unique("songs", "spotify_playlist")
+    return all_unique_playlists
 
 
 

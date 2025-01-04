@@ -28,7 +28,7 @@ class SpotifyInterface:
                              scope="user-library-read"))
     
 
-    def _convert_item_to_track_json(self, item):
+    def _convert_item_to_track_json(self, item, playlist_name):
         """
         Helper function that converts an item from playlistitems to a track json datastructure
 
@@ -63,7 +63,8 @@ class SpotifyInterface:
         track_json = {"spotify_name": track_name,
                       "spotify_url": track_spotify_url,
                       "spotify_artists": track_artists,
-                      "spotify_yt_query": track_yt_query
+                      "spotify_yt_query": track_yt_query,
+                      "spotify_playlist": playlist_name
                       }
         return track_json
         
@@ -77,25 +78,28 @@ class SpotifyInterface:
             return ([json]): A list of tracks metadata 
         """
         spotify = self.sp_spotify
+        playlist_data = spotify.playlist(playlist_url) 
+        playlist_name = playlist_data.get('name', "Unknown Playlist")
+        print(playlist_name)
         results = spotify.playlist_items(playlist_url)
 
 
         loaded_tracks = []
         for item in results['items']:
-            track_json = self._convert_item_to_track_json(item)
+            #helper_prettify(item)
+            track_json = self._convert_item_to_track_json(item, playlist_name)
             loaded_tracks.append(track_json)
         
         return loaded_tracks
     
 
-#load_dotenv()
-#CLIENT_ID = os.environ.get("CLIENT_ID")
-#CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
-#APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
-#
-#meow = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
-#tracks = meow.load_tracks_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=K9IbtnKYQz2aUfOMOM4Dng")
-#helper_prettify(tracks)
+load_dotenv()
+CLIENT_ID = os.environ.get("CLIENT_ID")
+CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
+
+meow = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
+tracks = meow.load_tracks_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=K9IbtnKYQz2aUfOMOM4Dng")
 
 
 

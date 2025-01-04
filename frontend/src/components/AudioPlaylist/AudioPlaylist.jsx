@@ -1,11 +1,12 @@
 import {useContext} from 'react'
 import AudioPlayerContext from '../context/AudioPlayerContext';
 import styles from './AudioPlaylist.module.css';
+import { FiSpeaker } from "react-icons/fi";
 
 
-let AudioPlaylist = () => {
+let AudioPlaylist = ({}) => {
 
-    const {songsList, currentSongId, setCurrentSongId} = useContext(AudioPlayerContext)
+    const {currentPlaylist, songsList, currentSongId, setCurrentSongId} = useContext(AudioPlayerContext)
 
     const helperFormatTime = (secs) => {
         const minutes = Math.floor(secs / 60);
@@ -18,29 +19,42 @@ let AudioPlaylist = () => {
 
 
     return (
-        <div className='flex-col '>
-            <div>{currentSongId}</div>
+        <div>
+            <div className='flex items-center'>
+                <FiSpeaker size={50}/>
+                <div className = {`${styles.playlistheader}`}>{currentPlaylist}</div>
+            </div>
+
+            <div className = "flex flex-col h-screen">
 
             <div className={`${styles.scrolldiv}`}>
+                <div className='flex-col flex h-screen'>
 
-                <div className='flex-col'>
-                    {
-                        songsList.map((song, i) =>
-                            <div className="m-5 flex">
-                                <div className={`${styles.personaboxskew}`}>
-                                    <div className={`${styles.personabox} flex justify-between`}>
-                                        <div
-                                            key={i}
-                                            onClick={() => setCurrentSongId(i)}
-                                        >
-                                            {song.spotify_name}
+
+                    <div className='flex-col'>
+                        {
+                            songsList.map((song, i) =>
+                                <div className={`m-5 flex ${i % 2 === 0 ? 'ml-10' : 'mr-10'}`}>
+                                    <div className={`${styles.personaboxskew}`}>
+                                        <div className={`${styles.personabox} flex justify-between`}>
+                                            <div
+                                                key={i}
+                                                onClick={() => setCurrentSongId(i)}
+                                            >
+                                                {song.spotify_name}
+                                            </div>
+                                            <div>{helperFormatTime(song.youtube_length)}</div>
                                         </div>
-                                        <div>{helperFormatTime(song.youtube_length)}</div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    }
+                            )
+                        }
+                    </div>
+
+
+                    <div className='min-h-10'></div>
+
+                </div>
                 </div>
             </div>
         </div>
