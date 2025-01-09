@@ -6,6 +6,7 @@
 body {
     font-family: 'Manrope', sans-serif; /* Apply Manrope font */
     color: white;
+    overflow: hidden;
 
     @apply bg-_primary
 }

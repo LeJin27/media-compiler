@@ -2,6 +2,7 @@ import spotipy
 import pprint
 from spotipy.oauth2 import SpotifyOAuth
 import json
+import requests
 
 from dotenv import load_dotenv
 import os
@@ -28,7 +29,7 @@ class SpotifyInterface:
                              scope="user-library-read"))
     
 
-    def _convert_item_to_track_json(self, item, playlist_name):
+    def _convert_item_to_track_json(self, item, playlist_name, playlist_thumbnail):
         """
         Helper function that converts an item from playlistitems to a track json datastructure
 
@@ -64,6 +65,7 @@ class SpotifyInterface:
                       "spotify_url": track_spotify_url,
                       "spotify_artists": track_artists,
                       "spotify_yt_query": track_yt_query,
+                      "spotify_thumbnail": playlist_thumbnail,
                       "spotify_playlist": playlist_name
                       }
         return track_json
@@ -86,20 +88,32 @@ class SpotifyInterface:
 
         loaded_tracks = []
         for item in results['items']:
+            image_url = item['track']['album']['images'][0]['url']
+            filename = image_url.split('/')[-1]
+            r = requests.get(image_url, allow_redirects=True)
+            track_thumbnail_name = filename + ".png"
+            completeName = "./music_thumbnail/" + filename + ".png"
+            open(completeName, 'wb').write(r.content)
+
+
+            print("\n\n\n")
+
+
             #helper_prettify(item)
-            track_json = self._convert_item_to_track_json(item, playlist_name)
+            track_json = self._convert_item_to_track_json(item, playlist_name, track_thumbnail_name)
             loaded_tracks.append(track_json)
         
         return loaded_tracks
     
 
-load_dotenv()
-CLIENT_ID = os.environ.get("CLIENT_ID")
-CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
-APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
+if __name__ == "__main__":
+    load_dotenv()
+    CLIENT_ID = os.environ.get("CLIENT_ID")
+    CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+    APP_REDIRECT_URL = os.environ.get("APP_REDIRECT_URL")
 
-meow = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
-tracks = meow.load_tracks_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=K9IbtnKYQz2aUfOMOM4Dng")
+    meow = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
+    tracks = meow.load_tracks_from_playlist("https://open.spotify.com/playlist/07xdE0QkcFKOi8sQCcsMcz?si=K9IbtnKYQz2aUfOMOM4Dng")
 
 
 

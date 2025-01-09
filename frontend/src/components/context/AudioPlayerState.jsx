@@ -28,11 +28,7 @@ const AudioPlayerState = (props) => {
     }
 
     const setSongsList = (playlistName) => {
-        if (state.currentPlaylist === "") {
-            handleSongsFromDatabase()
-        } else {
-            handleSongsFromDatabase({"spotify_playlist" : playlistName})
-        }
+        handleSongsFromDatabase({"spotify_playlist" : playlistName})
     }
 
 
@@ -85,7 +81,6 @@ const AudioPlayerState = (props) => {
             prevSong,
             nextSong,
             playlists: state.playlists,
-            currentPlaylist : state.currentPlaylist,
             setCurrentPlaylist, 
             currentPlaylist: state.currentPlaylist,
             setSongsList

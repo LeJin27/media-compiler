@@ -18,8 +18,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<div>Welcome to the Home page</div>} />
           <Route path="/login" element={<PageLogin />} />
-          <Route path="/playlist" element={<PagePlaylist />} />
-          <Route path="/playlistgroup" element={<PagePlaylistGroup />} />
+          <Route path="/songs" element={<PagePlaylist />} />
+          <Route path="/playlists" element={<PagePlaylistGroup />} />
         </Routes>
     </AudioPlayerState>
   </div>

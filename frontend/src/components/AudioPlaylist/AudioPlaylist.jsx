@@ -27,18 +27,17 @@ let AudioPlaylist = ({}) => {
 
             <div className = "flex flex-col h-screen">
 
-            <div className={`${styles.scrolldiv}`}>
+            <div className={`${styles.scrolldiv} `}>
                 <div className='flex-col flex h-screen'>
 
 
                     <div className='flex-col'>
                         {
                             songsList.map((song, i) =>
-                                <div className={`m-5 flex ${i % 2 === 0 ? 'ml-10' : 'mr-10'}`}>
+                                <div key = {i} className={`m-5 flex ${i % 2 === 0 ? 'ml-10' : 'mr-10'}`}>
                                     <div className={`${styles.personaboxskew}`}>
                                         <div className={`${styles.personabox} flex justify-between`}>
                                             <div
-                                                key={i}
                                                 onClick={() => setCurrentSongId(i)}
                                             >
                                                 {song.spotify_name}

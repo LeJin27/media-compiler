@@ -48,14 +48,19 @@ class SpotifyToDatabase():
             [dict]: List of dictionaries that contains all tracks meta data
 
         """
-        tracks_from_playlist = self.spotify_interface.load_tracks_from_playlist(playlist_url)
+        try:
 
-        for track in tracks_from_playlist:
-            track_yt_query = track['spotify_yt_query']
-            track_url = self.youtube_interface.search_song(track_yt_query)
-            video_json = self.youtube_interface.download_video(track_url)
-            track.update(video_json)
-            self.user_db.insert_into_table("songs", track)
+            tracks_from_playlist = self.spotify_interface.load_tracks_from_playlist(playlist_url)
+
+            for track in tracks_from_playlist:
+                track_yt_query = track['spotify_yt_query']
+                track_url = self.youtube_interface.search_song(track_yt_query)
+                video_json = self.youtube_interface.download_video(track_url)
+                track.update(video_json)
+                self.user_db.insert_into_table("songs", track)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
     
 
 

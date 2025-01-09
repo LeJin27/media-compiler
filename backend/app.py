@@ -17,11 +17,15 @@ class song_base(BaseModel):
     spotify_name: Optional[str] = None
     spotify_artists: Optional[str] = None
     spotify_yt_query: Optional[str] = None
+    spotify_thumbnail: Optional[str] = None
     spotify_playlist: Optional[str] = None
     youtube_url: Optional[str] = None
     youtube_name: Optional[str] = None
     youtube_length: Optional[int] = None
     youtube_file_name: Optional[str] = None
+
+
+
 
 
 def convert_dict_list_to_models(dict_list: List[dict]) -> List[song_base]:
@@ -41,6 +45,7 @@ sqlite_json_schema = {
     "spotify_name": "TEXT",
     "spotify_artists": "TEXT",
     "spotify_yt_query": "TEXT",
+    "spotify_thumbnail": "TEXT",
     "spotify_playlist": "TEXT",
     "youtube_url": "TEXT",
     "youtube_name": "TEXT",
@@ -100,8 +105,13 @@ def get_audio(item_id: str):
 
 
 app.mount("/music", StaticFiles(directory="music"), name="music")
+app.mount("/music_thumbnail", StaticFiles(directory="music_thumbnail"), name="music_thumbnail")
 
-@app.get("/music/{filename}", summary="Get a music file", description="Retrieve a specific music file by its filename.")
-async def get_music_file(filename: str):
-    file_path = f"/music/{filename}"
-    return FileResponse(file_path)
+
+
+class PlaylistUrl(BaseModel):
+    url: str 
+
+@app.post("/playlists/")
+async def create_playlist(playlist : PlaylistUrl): 
+    spot_data.download_from_playlist(playlist.url)
