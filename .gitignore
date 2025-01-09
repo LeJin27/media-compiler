@@ -7,6 +7,7 @@ __pycache__/
 *.so
 
 backend/music/
+backend/music_thumbnail/
 backend/songs.db
 
 # Distribution / packaging
