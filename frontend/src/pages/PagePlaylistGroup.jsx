@@ -7,6 +7,7 @@ import AudioPlayerContext from '../components/context/AudioPlayerContext';
 import { Link } from 'react-router-dom';
 import ImageCard from '../components/card/ImageCard';
 import art from '../assets/Artwork.png';
+import { readThumbnail } from '../services/RestApi';
 
 
 
@@ -21,6 +22,8 @@ const PagePlaylistGroup = ({}) => {
         setSongsList(e)
 
     }
+
+
 
 
     return (
@@ -42,14 +45,10 @@ const PagePlaylistGroup = ({}) => {
                             playlists.map((playlist, i) =>
                                 <Link to="/songs" className=" w-[150px] h-[200px] relative flex items-end justify-center" onClick={(e) => handleFilterPlaylist(playlist)}>
 
-                                    <ImageCard imgSrc={art} >
+                                    <ImageCard imgSrc={art}>
                                         <h3>{playlist}</h3>
 
                                     </ImageCard>
-
-
-
-                                    
                                 
                                 </Link>
                             )

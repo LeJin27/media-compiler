@@ -34,6 +34,7 @@ export const readThumbnail = async(thumbnail_name) => {
         const response = await axios.get(baseURL + '/music_thumbnail/' + youtube_file_name, {
             responseType: 'blob',
         });
+        console.log(response.data)
         return response.data;
     } catch (error) {
         console.error('Error fetching songs:', error);
@@ -48,6 +49,18 @@ export const readPlaylists = async() => {
         return response.data;
     } catch (error) {
         console.error('Error fetching songs:', error);
+        throw error;
+    }
+}
+
+export const createPlayList = async(youtube_url) => {
+    try {
+        const response = await axios.post(baseURL + '/playlists/', {
+            "url" : youtube_url
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating playlist:', error);
         throw error;
     }
 }

@@ -12,8 +12,8 @@ import AudioControls from "./components/AudioControls/AudioControls";
 
 const App = () => (
   <div className="flex-col flex ">
-    <RouterHeader />
     <AudioPlayerState>
+        <RouterHeader />
 
         <Routes>
           <Route path="/" element={<div>Welcome to the Home page</div>} />

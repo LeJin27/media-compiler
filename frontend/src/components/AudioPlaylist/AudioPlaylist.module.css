@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
+
+
 .personaboxskew {
     transform: skew(-10deg);
 
@@ -12,27 +15,69 @@
     min-width: 500px;
 
 }
+.personabox:hover {
+    color: #3ECAFF;
+    transition: 0.1s;
 
-.personabox::before {
-    bottom: -5px;
-    right: -5px;
+}
+
+.personabox:hover::before {
     content: "";
     position: absolute;
     width: 100%;
     height: 100%; 
     background-color: white;
     z-index: -1;
+    animation: animate-before 0.1s linear;
 }
-.personabox::after {
-    top: -5px;
-    left: -5px;
+.personabox:hover::after {
     content: "";
     position: absolute;
     width: 100%;
     height: 100%; 
     background-color: #3ECAFF;
     z-index: -1;
+    animation: animate-after 0.1s linear;
+
+    animation-fill-mode: forwards;
 }
+
+
+@keyframes animate-after {
+	0% {
+        top: 0px;
+        left: 0px;
+
+    }
+	100% {
+        top: -5px;
+        left: -5px;
+	}
+
+}
+@keyframes animate-before {
+	0% {
+        bottom: 0px;
+        right: 0px;
+
+    }
+	100% {
+        bottom: -5px;
+        right: -5px;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 .scrolldiv {
@@ -52,10 +97,4 @@
 
 }
 
-.content {
-    grid-area: content;
-  display: flex;
-  flex-flow: column nowrap;
-  overflow: auto;
-  background-color: lightblue;
-}
+
