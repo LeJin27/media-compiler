@@ -39,22 +39,29 @@ let AudioPlaylist = ({}) => {
     return (
         <div>
             <div className='flex items-center'>
-                <FiSpeaker size={50}/>
 
-                <div className = {`${styles.playlistheader}`}>{currentPlaylist}</div>
+                <div className = {`ml-[0.5rem] ${styles.playlistheader}`}>{currentPlaylist}</div>
 
             </div>
 
             <div className = "flex flex-col h-screen">
+                <div className='flex gap-5 m-2 '>
+                    <div>Title</div>
+                    <div>Duration</div>
+                </div>
+
+                <hr
+                    className=" h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50"
+                />
 
                 <div className={`${styles.scrolldiv} `}>
-                    <div className='flex-col flex h-screen'>
-
+                    <div className='flex-col flex '>
 
                         <div className='flex-col'>
                             {
+
                                 songsList.map((song, i) =>
-                                    <div key={i} className={`m-2 flex ${i % 2 === 0 ? 'ml-10' : 'mr-10'}`}>
+                                    <div key={i} className={`m-2 flex `}>
                                         <div
                                             onClick={() => setCurrentSongId(i)}
                                         >

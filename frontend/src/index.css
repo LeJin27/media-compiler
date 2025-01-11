@@ -8,5 +8,5 @@ body {
     color: white;
     overflow: hidden;
 
-    @apply bg-_primary
+    @apply bg-_primary;
 }
