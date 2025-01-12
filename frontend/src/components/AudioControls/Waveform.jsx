@@ -18,7 +18,7 @@ const heightScale = 1;
     const maximum = 10;
     const minimum = -10;
 
-    canvasCtx.fillStyle = `rgba(0,153,76,0.2)`;
+    canvasCtx.fillStyle = `rgba(0,191,255,0.2)`;
     canvasCtx.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
 
     x += barWidth + 1;

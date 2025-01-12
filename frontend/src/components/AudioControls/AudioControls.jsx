@@ -22,25 +22,36 @@ const AudioControls = ()  => {
     const animationRef = useRef(); // reference animation
 
 
+    // --------------required for audio waveform----------------------
+    const audioCtxRef = useRef(null);
+    const sourceRef = useRef(null);
+    const analyzerRef = useRef(null);
     const [analyzerData, setAnalyzerData] = useState(null);
     const audioAnalyzer = () => {
-        // create a new AudioContext
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        // create an analyzer node with a buffer size of 2048
-        const analyzer = audioCtx.createAnalyser();
-        analyzer.fftSize = 2048;
+        if (!audioCtxRef.current) {
+            audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        }
 
-        const bufferLength = analyzer.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        const source = audioCtx.createMediaElementSource(audioRef.current);
-        source.connect(analyzer);
-        source.connect(audioCtx.destination);
-        source.onended = () => {
-            source.disconnect();
-        };
+        if (!sourceRef.current) {
+            sourceRef.current = audioCtxRef.current.createMediaElementSource(audioRef.current);
+        }
 
-        // set the analyzerData state with the analyzer, bufferLength, and dataArray
-        setAnalyzerData({ analyzer, bufferLength, dataArray });
+        if (!analyzerRef.current) {
+            analyzerRef.current = audioCtxRef.current.createAnalyser();
+            analyzerRef.current.fftSize = 2048;
+
+            const bufferLength = analyzerRef.current.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            sourceRef.current.connect(analyzerRef.current);
+            sourceRef.current.connect(audioCtxRef.current.destination);
+            sourceRef.current.onended = () => {
+                sourceRef.current.disconnect();
+            };
+
+            // set the analyzerData state with the analyzer, bufferLength, and dataArray
+            setAnalyzerData({ analyzer: analyzerRef.current, bufferLength, dataArray });
+        }
     };
 
 
@@ -143,92 +154,92 @@ const AudioControls = ()  => {
 
     return <div>
         {analyzerData && <WaveForm analyzerData={analyzerData} />}
-    
-    <div className={` flex-col fixed flex-1 w-full bottom-0 ${styles.carbonfibre} text-white border-2 border-white p-3`}>
+
+        <div className={` flex-col fixed flex-1 w-full bottom-0 ${styles.carbonfibre} text-white  p-3`}>
 
 
-        <audio
-            ref={audioRef}
-            onLoadedMetadata={helperOnLoadedMetaData}
-            type="audio/mpeg"
-            preload="true"
-            src={stateAudioSource}
-            onEnded={handleAudioEnd}
-        />
+            <audio
+                ref={audioRef}
+                onLoadedMetadata={helperOnLoadedMetaData}
+                type="audio/mpeg"
+                preload="true"
+                src={stateAudioSource}
+                onEnded={handleAudioEnd}
+            />
 
-        {/*Progress Bar*/}
-        <div className="flex justify-between">
-            <div className="flex-col text-left ">
-                <div className='start'>{songsList[currentSongId]?.spotify_name}</div>
-                <div className='text-xs'>{songsList[currentSongId]?.spotify_artists}</div>
-            </div>
+            {/*Progress Bar*/}
+            <div className="flex justify-between">
+                <div className="flex-col text-left ">
+                    <div className='start'>{songsList[currentSongId]?.spotify_name}</div>
+                    <div className='text-xs'>{songsList[currentSongId]?.spotify_artists}</div>
+                </div>
 
 
-            <div className='flex-col'>
-                {/*Pause component*/}
+                <div className='flex-col'>
+                    {/*Pause component*/}
 
-                <div className='flex justify-center'>
-                    <div key="go-previous"
-                        onClick={() => {
-                            handlePrevSong();
-                        }}
-                    >
-                        <BiSkipPrevious size={30} />
-                    </div>
-                    <div key="play-and-pause"
-                        onClick={() => {
-                            handleToggleAudio();
-                        }
-                        }
-                    >
-                        {songIsPlaying ? <BiPauseCircle size={30} /> : <BiPlayCircle size={30} />}
-                    </div>
-                    <div key="go-next">
-                        <BiSkipNext size={30}
+                    <div className='flex justify-center'>
+                        <div key="go-previous"
                             onClick={() => {
-                                handleNextSong();
+                                handlePrevSong();
                             }}
+                        >
+                            <BiSkipPrevious size={30} />
+                        </div>
+                        <div key="play-and-pause"
+                            onClick={() => {
+                                handleToggleAudio();
+                            }
+                            }
+                        >
+                            {songIsPlaying ? <BiPauseCircle size={30} /> : <BiPlayCircle size={30} />}
+                        </div>
+                        <div key="go-next">
+                            <BiSkipNext size={30}
+                                onClick={() => {
+                                    handleNextSong();
+                                }}
 
 
-                        />
+                            />
+                        </div>
+
+
                     </div>
 
-
+                    <div className='flex gap-4'>
+                        <div>{helperFormatTime(stateCurrentTime)}</div>
+                        <input
+                            onChange={handleChangeRange}
+                            defaultValue="0"
+                            ref={progressBarRef}
+                            type="range">
+                        </input>
+                        <div>{helperFormatTime(stateDuration)}</div>
+                    </div>
                 </div>
 
-                <div className='flex gap-4'>
-                    <div>{helperFormatTime(stateCurrentTime)}</div>
+
+
+                <div className='flex items-center gap-4'>
+                    <HiMiniSpeakerWave size={25} />
+
+
                     <input
-                        onChange={handleChangeRange}
-                        defaultValue="0"
-                        ref={progressBarRef}
-                        type="range">
+                        className=''
+                        value={Math.round(stateVolume * 100)}
+                        type="range"
+                        onChange={(e) => handleVolume(e.target.value / 100)}>
                     </input>
-                    <div>{helperFormatTime(stateDuration)}</div>
                 </div>
             </div>
 
 
 
-            <div className='flex items-center gap-4'>
-                <HiMiniSpeakerWave size={25} />
 
 
-                <input
-                    className=''
-                    value={Math.round(stateVolume * 100)}
-                    type="range"
-                    onChange={(e) => handleVolume(e.target.value / 100)}>
-                </input>
-            </div>
+
         </div>
-
-
-
-
-
-
- </div>   
     </div>
 }
 export default AudioControls

@@ -14,7 +14,7 @@ import { readThumbnail } from '../services/RestApi';
 
 
 const PagePlaylistGroup = ({}) => {
-    const {playlists, setSongsList, setCurrentPlaylist, currentPlaylist} = useContext(AudioPlayerContext)
+    const {playlists, setSongsList, setCurrentPlaylist, currentPlaylist, setPlaylistFromDB} = useContext(AudioPlayerContext)
 
     const handleFilterPlaylist = (e) => {
         console.log(e)
@@ -22,6 +22,9 @@ const PagePlaylistGroup = ({}) => {
         setSongsList(e)
 
     }
+    useEffect(() => {
+        setPlaylistFromDB()
+    }, []); 
 
 
 

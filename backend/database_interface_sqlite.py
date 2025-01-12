@@ -4,7 +4,7 @@ import sqlite3
 class DatabaseInterfaceSqlite:
     def __init__(self, dbname):
         # for some reason you get thread error without it
-        self.connection = sqlite3.connect("songs.db", check_same_thread=False)
+        self.connection = sqlite3.connect(dbname, check_same_thread=False)
         self.cursor = self.connection.cursor()
 
     def create_table(self, table_name, schema_json):
@@ -47,6 +47,8 @@ class DatabaseInterfaceSqlite:
         except Exception as e:
             print(f"An error occurred: {e}")
             return []
+
+
 
 
 
@@ -123,6 +125,32 @@ class DatabaseInterfaceSqlite:
         except Exception as e:
             print("Insertion gone wrong {e}", e)
 
+    def delete_from_table(self, table_name, dynamic_query):
+        try:
+            self.connection.row_factory = sqlite3.Row
+            self.cursor = self.connection.cursor()
+
+            sql_query = f"DELETE FROM {table_name}"
+
+            dynamic_query_is_not_empty = dynamic_query != None and len(dynamic_query) != 0
+            if (dynamic_query_is_not_empty):
+                sql_query += " WHERE "
+                table_schema = ' AND '.join(f"{json_key} = '{json_value}'" for (
+                    json_key, json_value) in dynamic_query.items())
+                sql_query += table_schema
+
+            print(sql_query)
+
+            self.cursor.execute(sql_query)
+
+            #items = [dict(row) for row in self.cursor.fetchall()]
+            #return items
+
+        except Exception as e:
+            print(f"Error deleting items from table {e}", e)
+
+        
+
         
 
     def insert_into_table(self, table_name, row_json):
@@ -161,10 +189,16 @@ class DatabaseInterfaceSqlite:
         except Exception as e:
             print("Insertion gone wrong {e}", e)
 
-#dog = DatabaseInterfaceSqlite("songs")
-#print(dog.get_all_unique("songs", "spotify_playlist"))
+
+if (__name__ == "__main__"):
+    dragon = DatabaseInterfaceSqlite("dragon.db")
+    dragon_schema = {
+        "dragon_key": "INTEGER PRIMARY KEY",
+        "dragon_first_name": "TEXT",
+        "dragon_last_name": "TEXT",
+    }
+    dragon.create_table("den", dragon_schema)
 
 
-
-
-
+    dragon.delete_from_table("den", {"dragon_first_name": "Jin"})
+    print(dragon.get_items_from_table("den"))

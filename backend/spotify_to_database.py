@@ -34,6 +34,11 @@ class SpotifyToDatabase():
         self.spotify_interface = SpotifyInterface(CLIENT_ID, CLIENT_SECRET, APP_REDIRECT_URL)
     
 
+    def download_from_youtube_url(self, youtube_url):
+        youtube_json = self.youtube_interface.download_video(youtube_url)
+        self.user_db.insert_into_table("songs", youtube_json)
+
+
 
     def download_from_playlist(self, playlist_url):
         """

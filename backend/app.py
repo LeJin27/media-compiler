@@ -38,7 +38,7 @@ def convert_dict_list_to_models(dict_list: List[dict]) -> List[song_base]:
     return [song_base(**dict_entry) for dict_entry in dict_list]
 
 
-sqlite_db = DatabaseInterfaceSqlite("media_compiler")
+sqlite_db = DatabaseInterfaceSqlite("media_compiler.db")
 sqlite_json_schema = {
     "spotify_key": "INTEGER PRIMARY KEY",
     "spotify_url": "TEXT",
@@ -54,7 +54,6 @@ sqlite_json_schema = {
 }
 sqlite_db.create_table("songs", sqlite_json_schema)
 spot_data = SpotifyToDatabase(sqlite_db)
-#spot_data.download_from_playlist("https://open.spotify.com/playlist/1Rbuu3tvkRQwXFth8qf5BZ?si=8e9fecb805464977")
 
 app = FastAPI()
 origins = [
@@ -86,6 +85,14 @@ async def read_items(params: song_base = Depends()):
 
     return models
 
+@app.delete("/songs/")
+async def delete_items(params: song_base = Depends()):
+    params_dict = params.model_dump()
+    print(f"Received params: {params_dict}")  # Logs incoming parameters
+    filtered_params = _filter_dict_valid_key(params_dict)
+    sqlite_db.delete_from_table("songs", filtered_params)
+
+
 @app.get("/playlists/")
 async def read_playlists():
     # remove none values in song_base and convert to dictioanry
@@ -115,3 +122,4 @@ class PlaylistUrl(BaseModel):
 @app.post("/playlists/")
 async def create_playlist(playlist : PlaylistUrl): 
     spot_data.download_from_playlist(playlist.url)
+

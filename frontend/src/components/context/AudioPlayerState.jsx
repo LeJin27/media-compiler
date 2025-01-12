@@ -15,7 +15,7 @@ const AudioPlayerState = (props) => {
         
     }
 
-    const handleReadPlaylists = async() => {
+    const setPlaylistFromDB = async() => {
         const fetchedPlayLists = await readPlaylists()
         dispatch({ type: 'SET_PLAYLISTS', data: fetchedPlayLists });
     }
@@ -37,7 +37,7 @@ const AudioPlayerState = (props) => {
 
     useEffect(() => {
         setSongsList()
-        handleReadPlaylists()
+        setPlaylistFromDB()
     }, []); 
 
     const setCurrentSongId = (id) => dispatch({type: 'SET_CURRENT_SONG', data: id})
@@ -83,7 +83,8 @@ const AudioPlayerState = (props) => {
             playlists: state.playlists,
             setCurrentPlaylist, 
             currentPlaylist: state.currentPlaylist,
-            setSongsList
+            setSongsList,
+            setPlaylistFromDB
         }}
     >
         {props.children}

@@ -32,14 +32,14 @@ const RouterHeader = () => {
 
         <div className="relative flex h-[3rem]">
           <input
-            className="bg-transparent border-4 border-[limegreen] rounded-3xl text-xl text-white flex pl-9 pr-5 relative outline-none"
+            className="bg-transparent border-4 border-[#3ECAFF] rounded-3xl text-xl text-white flex pl-9 pr-5 relative outline-none"
             type="text" placeholder = "spotify playlist url..."value={userInputUrl} onChange={(e) => setUserInputUrl(e.target.value)}
             onKeyDown={handleSearchKeyDown}
             
           >
 
           </input>
-          <IoMdSearch className = "absolute m-0 -translate-y-[-50%] ml-3" size={25} color="limegreen"/>
+          <IoMdSearch className = "absolute m-0 -translate-y-[-50%] ml-3" size={25} color="#ffffff"/>
         </div>
 
 
