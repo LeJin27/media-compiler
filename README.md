@@ -2,7 +2,7 @@
 
 ### Description
 - Downloads songs from spotify playlist url and stores in sqlite database
-
+- User can play songs and switch between playlists in browser
 
 ### To do
 - [ ] Context menu on right click
@@ -12,3 +12,6 @@
 - [ ] Edit of song titles and artists
 - [ ] More detailed information about songs in a context menu
 - [ ] More animations
+- [ ] Shuffle and random song
+- [ ] Possibly electron to convert to local app
+- [ ] Delete songs and thumbnails that do not exist in database
