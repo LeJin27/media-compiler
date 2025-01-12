@@ -5,6 +5,7 @@ import { readMusic } from '../../services/RestApi'
 import styles from './AudioControls.module.css';
 import { BiSkipNext,BiSkipPrevious,BiPlayCircle,BiPauseCircle } from "react-icons/bi";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
+import WaveForm from './Waveform';
 
 
 const AudioControls = ()  => {
@@ -19,6 +20,30 @@ const AudioControls = ()  => {
     const audioRef = useRef(null) 
     const progressBarRef = useRef(); // refernce to progress bar
     const animationRef = useRef(); // reference animation
+
+
+    const [analyzerData, setAnalyzerData] = useState(null);
+    const audioAnalyzer = () => {
+        // create a new AudioContext
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // create an analyzer node with a buffer size of 2048
+        const analyzer = audioCtx.createAnalyser();
+        analyzer.fftSize = 2048;
+
+        const bufferLength = analyzer.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        const source = audioCtx.createMediaElementSource(audioRef.current);
+        source.connect(analyzer);
+        source.connect(audioCtx.destination);
+        source.onended = () => {
+            source.disconnect();
+        };
+
+        // set the analyzerData state with the analyzer, bufferLength, and dataArray
+        setAnalyzerData({ analyzer, bufferLength, dataArray });
+    };
+
+
 
     const handleVolume = (q) => {
         setStateVolume(q)
@@ -44,21 +69,8 @@ const AudioControls = ()  => {
             animationRef.current = requestAnimationFrame(helperWhilePlaying)
             setPlayingStatus(true)
         }
-
-        /*
-        if (audioRef.current.paused) {
-            audioRef.current.play();
-            // progress bar shenanigans
-            animationRef.current = requestAnimationFrame(helperWhilePlaying)
-            setPlayingStatus(true)
-        } else {
-            audioRef.current.pause();
-            cancelAnimationFrame(animationRef.current)
-            setPlayingStatus(false)
-        }
-        */
     }
-    
+
 
     // sets progressbar  timestamp to location of audio timestamp 
     const helperWhilePlaying = () => {
@@ -81,7 +93,7 @@ const AudioControls = ()  => {
             cancelAnimationFrame(animationRef.current)
         }
     }
-    
+
     // sets audio timestamp to location of progress bar same as above but opposite
     const handleChangeRange = () => {
         audioRef.current.currentTime = progressBarRef.current.value;
@@ -92,7 +104,7 @@ const AudioControls = ()  => {
         const minutes = Math.floor(secs / 60);
         const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`
         const seconds = Math.floor(secs % 60)
-        const returnedSeconds = seconds < 10 ? `0${seconds}`: `${seconds}`
+        const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`
         const returnedTime = `${returnedMinutes} : ${returnedSeconds}`;
         return returnedTime
     }
@@ -110,8 +122,9 @@ const AudioControls = ()  => {
                 try {
                     const song_youtube_file_name = songsList[currentSongId].youtube_file_name
                     const blob = await readMusic(song_youtube_file_name);
-                    const objectUrl = URL.createObjectURL(blob); 
+                    const objectUrl = URL.createObjectURL(blob);
                     setStateAudioSource(objectUrl);
+                    audioAnalyzer();
                 } catch (error) {
                     console.error('Error fetching audio:', error);
                 }
@@ -128,19 +141,24 @@ const AudioControls = ()  => {
     }, [currentSongId, songsList]);
 
 
-    return <div className={` flex-col fixed flex-1 w-full bottom-0 ${styles.carbonfibre} text-white border-2 border-white p-3`}>
-        <audio 
-            ref = {audioRef}
+    return <div>
+        {analyzerData && <WaveForm analyzerData={analyzerData} />}
+    
+    <div className={` flex-col fixed flex-1 w-full bottom-0 ${styles.carbonfibre} text-white border-2 border-white p-3`}>
+
+
+        <audio
+            ref={audioRef}
             onLoadedMetadata={helperOnLoadedMetaData}
-            type= "audio/mpeg"
-            preload = "true"
-            src = {stateAudioSource}
+            type="audio/mpeg"
+            preload="true"
+            src={stateAudioSource}
             onEnded={handleAudioEnd}
         />
 
         {/*Progress Bar*/}
-        <div className ="flex justify-between">
-            <div className = "flex-col text-left ">
+        <div className="flex justify-between">
+            <div className="flex-col text-left ">
                 <div className='start'>{songsList[currentSongId]?.spotify_name}</div>
                 <div className='text-xs'>{songsList[currentSongId]?.spotify_artists}</div>
             </div>
@@ -150,14 +168,14 @@ const AudioControls = ()  => {
                 {/*Pause component*/}
 
                 <div className='flex justify-center'>
-                    <div key = "go-previous"
+                    <div key="go-previous"
                         onClick={() => {
                             handlePrevSong();
                         }}
                     >
-                        <BiSkipPrevious size = {30}/>
+                        <BiSkipPrevious size={30} />
                     </div>
-                    <div key = "play-and-pause"
+                    <div key="play-and-pause"
                         onClick={() => {
                             handleToggleAudio();
                         }
@@ -165,13 +183,13 @@ const AudioControls = ()  => {
                     >
                         {songIsPlaying ? <BiPauseCircle size={30} /> : <BiPlayCircle size={30} />}
                     </div>
-                    <div key = "go-next">
-                        <BiSkipNext size = {30}
+                    <div key="go-next">
+                        <BiSkipNext size={30}
                             onClick={() => {
                                 handleNextSong();
                             }}
-                        
-                        
+
+
                         />
                     </div>
 
@@ -193,7 +211,7 @@ const AudioControls = ()  => {
 
 
             <div className='flex items-center gap-4'>
-                <HiMiniSpeakerWave  size = {25}/>
+                <HiMiniSpeakerWave size={25} />
 
 
                 <input
@@ -210,6 +228,7 @@ const AudioControls = ()  => {
 
 
 
+ </div>   
     </div>
 }
 export default AudioControls
