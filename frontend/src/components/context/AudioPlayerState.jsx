@@ -32,10 +32,6 @@ const AudioPlayerState = (props) => {
     }
 
 
-    //const setSongsList = (songsListArg) => {
-    //    dispatch({ type: 'SET_SONGS_LIST', data: songsListArg });
-
-    //}
 
 
 

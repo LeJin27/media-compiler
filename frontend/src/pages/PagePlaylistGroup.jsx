@@ -46,7 +46,7 @@ const PagePlaylistGroup = ({}) => {
                     <div className='flex relative gap-3 flex-wrap rounded-xl bg-[#0f0f0f] p-5'>
                         {
                             playlists.map((playlist, i) =>
-                                <Link to="/songs" className=" w-[150px] h-[200px] relative flex items-end justify-center" onClick={(e) => handleFilterPlaylist(playlist)}>
+                                <Link key = {i} to="/songs" className=" w-[150px] h-[200px] relative flex items-end justify-center" onClick={(e) => handleFilterPlaylist(playlist)}>
 
                                     <ImageCard imgSrc={art}>
                                         <h3>{playlist}</h3>
