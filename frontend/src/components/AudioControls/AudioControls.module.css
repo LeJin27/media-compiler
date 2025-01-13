@@ -1,18 +1,4 @@
-.progressBar {
-    --bar-bg: #ffe3d4;
-    --seek-before-width: 100px;
-    --seek-before-color: #ffc2a1;
-    --knobby:  #3452a5;
-    --selectedKnobby:  #26c9c3;
-}
 
-input[type=range][orient=vertical] {
-    writing-mode: vertical-lr;
-    direction: rtl;
-    appearance: slider-vertical;
-    width: 16px;
-    vertical-align: bottom;
-}
 
 .carbonfibre {
 
