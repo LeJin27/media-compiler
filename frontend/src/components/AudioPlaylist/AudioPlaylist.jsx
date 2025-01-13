@@ -98,7 +98,6 @@ let AudioPlaylist = ({}) => {
 
                         <div className='flex-col'>
                             {
-
                                 songsList.map((song, i) =>
                                     <div key={i} className={`m-2 flex `}>
 
@@ -107,11 +106,12 @@ let AudioPlaylist = ({}) => {
                                             onClick={() => setCurrentSongId(i)
                                             }
                                             onContextMenu={(event) => handleContextMenu(event, song)}
+                                            className='flex flex-grow '
                                         >
 
 
 
-                                            <div className={`${styles.personabox} flex justify-between`}>
+                                            <div className={`${styles.personabox} flex justify-between flex-grow-1`}>
                                                 <div className='flex gap-2 items-center'>
                                                     <img alt=" " src={art} className="h-8 w-8" />
                                                     {song.spotify_name}
@@ -119,16 +119,6 @@ let AudioPlaylist = ({}) => {
                                                 <div>{helperFormatTime(song.youtube_length)}</div>
                                             </div>
                                         </div>
-
-
-
-
-
-
-
-
-
-
 
                                     </div>
                                 )
