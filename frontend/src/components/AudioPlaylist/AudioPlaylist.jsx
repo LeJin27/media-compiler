@@ -4,11 +4,15 @@ import styles from './AudioPlaylist.module.css';
 import { FiSpeaker } from "react-icons/fi";
 import art from '../../assets/Artwork.png';
 import { readThumbnail } from '../../services/RestApi';
+import ContextMenu from './ContextMenu';
+import { createPortal } from 'react-dom';
 
 
 let AudioPlaylist = ({}) => {
 
     const {currentPlaylist, songsList, currentSongId, setCurrentSongId} = useContext(AudioPlayerContext)
+
+
 
     const helperFormatTime = (secs) => {
         const minutes = Math.floor(secs / 60);
@@ -34,18 +38,53 @@ let AudioPlaylist = ({}) => {
     */}
 
 
+    
+    const [menuVisible, setMenuVisible]  = useState(false)
+    const [menuPosition, setMenuPosition]  = useState({x: 0, y: 0})
+    const [menuItems, setMenuItems] = useState([
+        { label: 'Remove from this playlist'},
+        { label: 'Option 2', action: () => console.log('Option 2 selected') },
+    ]);
+
+    const handleMenuSong = (song) => {
+        console.log(song)
+    }
+
+    const handleContextMenu = (event, song) => {
+        event.preventDefault();
+        setMenuPosition({x: event.pageX, y: event.pageY});
+        setMenuVisible(true)
+        setMenuItems(prevMenuItems => prevMenuItems.map(item => {
+            if (item.label === 'Remove from this playlist') {
+                return {
+                    ...item,
+                    action: () => handleMenuSong(song)  // Update the action with the correct song
+                };
+            }
+            return item; // Leave other items unchanged
+        }));
+
+
+    };
+
+    const handleClick = () => {
+        if (menuVisible) setMenuVisible(false);
+    };
+
+
 
 
     return (
-        <div>
+        <div className='relative' onClick={handleClick}>
             <div className='flex items-center'>
 
-                <div className = {`ml-[0.5rem] ${styles.playlistheader}`}>{currentPlaylist}</div>
+                <div className={`ml-[0.5rem] ${styles.playlistheader}`}>{currentPlaylist}</div>
 
             </div>
 
-            <div className = "flex flex-col h-screen">
+            <div className="flex flex-col h-screen">
                 <div className='flex gap-5 m-2 '>
+                    <div>Doctor Appointment 11:20AM</div>
                     <div>Title</div>
                     <div>Duration</div>
                 </div>
@@ -62,21 +101,35 @@ let AudioPlaylist = ({}) => {
 
                                 songsList.map((song, i) =>
                                     <div key={i} className={`m-2 flex `}>
-                                        <div
-                                            onClick={() => setCurrentSongId(i)}
-                                        >
-                                            <div className={`${styles.personabox} flex justify-between`}>
 
+
+                                        <div
+                                            onClick={() => setCurrentSongId(i)
+                                            }
+                                            onContextMenu={(event) => handleContextMenu(event, song)}
+                                        >
+
+
+
+                                            <div className={`${styles.personabox} flex justify-between`}>
                                                 <div className='flex gap-2 items-center'>
                                                     <img alt=" " src={art} className="h-8 w-8" />
                                                     {song.spotify_name}
-
                                                 </div>
-
-
                                                 <div>{helperFormatTime(song.youtube_length)}</div>
                                             </div>
                                         </div>
+
+
+
+
+
+
+
+
+
+
+
                                     </div>
                                 )
                             }
@@ -88,6 +141,8 @@ let AudioPlaylist = ({}) => {
                     </div>
                 </div>
             </div>
+
+            {menuVisible && createPortal(<ContextMenu items={menuItems} position={menuPosition} />, document.getElementById("root"))}
         </div>
 
     );
