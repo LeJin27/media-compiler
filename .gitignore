@@ -9,6 +9,7 @@ __pycache__/
 backend/music/
 backend/music_thumbnail/
 backend/songs.db
+backend/media_compiler.db
 
 # Distribution / packaging
 .Python
