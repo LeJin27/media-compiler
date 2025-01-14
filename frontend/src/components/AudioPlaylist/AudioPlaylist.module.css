@@ -9,7 +9,7 @@
 .personabox {
     display: flex;
     position: relative;
-    background-color: rgba(0, 0, 0, .8);
+    background-color: rgba(0, 0, 0, .4);
     color: white;
     padding: 5px;
     flex-grow: 1;
@@ -17,6 +17,7 @@
 }
 .personabox:hover {
     color: #3ECAFF;
+    background-color: rgba(0, 0, 0, 1);
     transition: 0.1s;
 
 }

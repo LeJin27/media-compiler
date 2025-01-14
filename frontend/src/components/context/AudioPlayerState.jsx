@@ -27,8 +27,12 @@ const AudioPlayerState = (props) => {
         dispatch({ type: 'SET_SONGS_LIST', data: fetchedLists });
     }
 
-    const setSongsList = (playlistName) => {
+    const setSongsListGivenPlaylist = (playlistName) => {
         handleSongsFromDatabase({"spotify_playlist" : playlistName})
+    }
+
+    const setSongsList = (songsListArg) => {
+        dispatch({ type: 'SET_SONGS_LIST', data: songsListArg });
     }
 
 
@@ -37,7 +41,7 @@ const AudioPlayerState = (props) => {
 
 
     useEffect(() => {
-        setSongsList()
+        setSongsListGivenPlaylist()
         setPlaylistFromDB()
     }, []); 
 
@@ -84,8 +88,9 @@ const AudioPlayerState = (props) => {
             playlists: state.playlists,
             setCurrentPlaylist, 
             currentPlaylist: state.currentPlaylist,
-            setSongsList: setSongsList,
-            setPlaylistFromDB
+            setSongsListGivenPlaylist: setSongsListGivenPlaylist,
+            setPlaylistFromDB,
+            setSongsList
         }}
     >
         {props.children}

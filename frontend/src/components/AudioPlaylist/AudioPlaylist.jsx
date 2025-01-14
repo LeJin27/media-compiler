@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom';
 
 let AudioPlaylist = ({}) => {
 
-    const {currentPlaylist, songsList, currentSongId, setCurrentSongId} = useContext(AudioPlayerContext)
+    const {setSongsList,currentPlaylist, songsList, currentSongId, setCurrentSongId} = useContext(AudioPlayerContext)
 
 
 
@@ -47,8 +47,11 @@ let AudioPlaylist = ({}) => {
     ]);
 
     const handleMenuSong = async(song) => {
-        await deleteSong(song)
-        console.log("deleted song")
+        await deleteSong({"spotify_key" : song.spotify_key})
+        setSongsList(songsList.filter(eachSong => eachSong.spotify_key !== song.spotify_key))
+
+
+
     }
 
     const handleContextMenu = (event, song) => {
