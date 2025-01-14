@@ -17,6 +17,18 @@ export const readSongs = async(dictionary_arg) => {
 
 }
 
+export const deleteSong = async(dictionary_arg) => {
+    try {
+        const response = await axios.delete(baseURL + '/songs/', {
+            params: dictionary_arg
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting song:', error);
+        throw error;
+    }
+}
+
 //reading local files music folder
 export const readMusic = async(youtube_file_name) => {
     try {

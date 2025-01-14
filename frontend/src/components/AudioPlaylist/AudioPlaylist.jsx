@@ -3,7 +3,7 @@ import AudioPlayerContext from '../context/AudioPlayerContext';
 import styles from './AudioPlaylist.module.css';
 import { FiSpeaker } from "react-icons/fi";
 import art from '../../assets/Artwork.png';
-import { readThumbnail } from '../../services/RestApi';
+import { deleteSong, readThumbnail } from '../../services/RestApi';
 import ContextMenu from './ContextMenu';
 import { createPortal } from 'react-dom';
 
@@ -46,8 +46,9 @@ let AudioPlaylist = ({}) => {
         { label: 'Option 2', action: () => console.log('Option 2 selected') },
     ]);
 
-    const handleMenuSong = (song) => {
-        console.log(song)
+    const handleMenuSong = async(song) => {
+        await deleteSong(song)
+        console.log("deleted song")
     }
 
     const handleContextMenu = (event, song) => {
