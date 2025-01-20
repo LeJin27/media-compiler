@@ -38,6 +38,12 @@ let AudioPlaylist = ({}) => {
     */}
 
 
+    const [imageSrc, setImageSrc] = useState('');
+    useEffect(() => {
+        const imageSrc = readThumbnail("ab67616d0000b273a2a12c2e989c20e9fc78ea8f.png");
+    }, [songsList]);
+
+
     
     const [menuVisible, setMenuVisible]  = useState(false)
     const [menuPosition, setMenuPosition]  = useState({x: 0, y: 0})
@@ -49,9 +55,6 @@ let AudioPlaylist = ({}) => {
     const handleMenuSong = async(song) => {
         await deleteSong({"spotify_key" : song.spotify_key})
         setSongsList(songsList.filter(eachSong => eachSong.spotify_key !== song.spotify_key))
-
-
-
     }
 
     const handleContextMenu = (event, song) => {
@@ -86,9 +89,12 @@ let AudioPlaylist = ({}) => {
 
             </div>
 
+
+
+
+
             <div className="flex flex-col h-screen">
-                <div className='flex gap-5 m-2 '>
-                    <div>Doctor Appointment 11:20AM</div>
+                <div className='flex gap-5 m-2 justify-between'>
                     <div>Title</div>
                     <div>Duration</div>
                 </div>
@@ -114,10 +120,9 @@ let AudioPlaylist = ({}) => {
                                         >
 
 
-
                                             <div className={`${styles.personabox} flex justify-between flex-grow-1`}>
                                                 <div className='flex gap-2 items-center'>
-                                                    <img alt=" " src={art} className="h-8 w-8" />
+                                                    <img alt=" " src={song.spotify_thumbnail} className="h-8 w-8" />
                                                     {song.spotify_name}
                                                 </div>
                                                 <div>{helperFormatTime(song.youtube_length)}</div>

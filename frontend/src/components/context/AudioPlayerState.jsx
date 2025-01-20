@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useReducer} from 'react'
 import AudioPlayerReducer from './AudioPlayerReducer';
 import AudioPlayerContext from './AudioPlayerContext';
-import { readPlaylists, readSongs } from '../../services/RestApi';
+import { readPlaylists, readSongs, readThumbnail } from '../../services/RestApi';
 
 
 const AudioPlayerState = (props) => {
@@ -24,7 +24,14 @@ const AudioPlayerState = (props) => {
 
     const handleSongsFromDatabase = async (query) => {
         const fetchedLists = await readSongs(query);
-        dispatch({ type: 'SET_SONGS_LIST', data: fetchedLists });
+        const updatedSongs = await Promise.all(
+            fetchedLists.map(async (song) => {
+                song.spotify_thumbnail = await readThumbnail(song.spotify_thumbnail);
+                return song;
+            })
+        );
+
+        dispatch({ type: 'SET_SONGS_LIST', data: updatedSongs });
     }
 
     const setSongsListGivenPlaylist = (playlistName) => {

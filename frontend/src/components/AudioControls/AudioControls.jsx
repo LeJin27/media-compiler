@@ -169,10 +169,13 @@ const AudioControls = ()  => {
 
             {/*Progress Bar*/}
             <div className="flex justify-between">
-                <div className="flex-col text-left ">
-                    <div className='start'>{songsList[currentSongId]?.spotify_name}</div>
-                    <div className='text-xs'>{songsList[currentSongId]?.spotify_artists}</div>
-                </div>
+                    <div className='flex'>
+                        <img alt=" " src={songsList[currentSongId]?.spotify_thumbnail} className="h-10 w-10 m-2" />
+                        <div className='flex-col'>
+                            <div className='start'>{songsList[currentSongId]?.spotify_name}</div>
+                            <div className='text-xs'>{songsList[currentSongId]?.spotify_artists}</div>
+                        </div>
+                    </div>
 
 
                 <div className='flex-col'>

@@ -43,11 +43,11 @@ export const readMusic = async(youtube_file_name) => {
 }
 export const readThumbnail = async(thumbnail_name) => {
     try {
-        const response = await axios.get(baseURL + '/music_thumbnail/' + youtube_file_name, {
+        const response = await axios.get(baseURL + '/music_thumbnail/' + thumbnail_name, {
             responseType: 'blob',
         });
-        console.log(response.data)
-        return response.data;
+        const imageUrl = URL.createObjectURL(response.data);
+        return imageUrl;
     } catch (error) {
         console.error('Error fetching songs:', error);
         throw error;
