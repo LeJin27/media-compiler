@@ -38,10 +38,6 @@ let AudioPlaylist = ({}) => {
     */}
 
 
-    const [imageSrc, setImageSrc] = useState('');
-    useEffect(() => {
-        const imageSrc = readThumbnail("ab67616d0000b273a2a12c2e989c20e9fc78ea8f.png");
-    }, [songsList]);
 
 
     
@@ -82,7 +78,7 @@ let AudioPlaylist = ({}) => {
 
 
     return (
-        <div className='relative' onClick={handleClick}>
+        <div className='relative flex-1' onClick={handleClick}>
             <div className='flex items-center'>
 
                 <div className={`ml-[0.5rem] ${styles.playlistheader}`}>{currentPlaylist}</div>

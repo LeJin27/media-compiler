@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import ImageCard from '../components/card/ImageCard';
 import art from '../assets/Artwork.png';
 import { readThumbnail } from '../services/RestApi';
+import AudioControls from '../components/AudioControls/AudioControls';
 
 
 
@@ -35,7 +36,6 @@ const PagePlaylistGroup = ({}) => {
             <div></div>
 
 
-            <AudioPlayerState>
                 <div className='flex justify-between'>
                     <div className='spacer'></div>
                 
@@ -61,7 +61,7 @@ const PagePlaylistGroup = ({}) => {
 
                     <div className = "spacer"></div>
                 </div>
-            </AudioPlayerState>
+                <AudioControls/>
         </div>
     );
 };

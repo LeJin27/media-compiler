@@ -24,6 +24,9 @@ class song_base(BaseModel):
     youtube_length: Optional[int] = None
     youtube_file_name: Optional[str] = None
 
+class youtube_url_base(BaseModel):
+    youtube_url: Optional[str] = None
+
 
 
 
@@ -54,6 +57,7 @@ sqlite_json_schema = {
 }
 sqlite_db.create_table("songs", sqlite_json_schema)
 spot_data = SpotifyToDatabase(sqlite_db)
+#spot_data.download_from_youtube_url("https://www.youtube.com/watch?v=B2PWmTwtYIM", {"spotify_name" : "dog"})
 
 app = FastAPI()
 origins = [
@@ -123,3 +127,12 @@ class PlaylistUrl(BaseModel):
 async def create_playlist(playlist : PlaylistUrl): 
     spot_data.download_from_playlist(playlist.url)
 
+
+@app.post("/songs/")
+async def create_youtube_song(yt_link : str, params: song_base = Depends()):
+    # remove none values in song_base and convert to dictioanry
+    params_dict = params.model_dump()
+    print(f"Received params: {params_dict}")  # Logs incoming parameters
+    filtered_params = _filter_dict_valid_key(params_dict)
+
+    spot_data.download_from_youtube_url(yt_link, filtered_params)

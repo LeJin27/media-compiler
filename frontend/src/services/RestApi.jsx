@@ -1,4 +1,5 @@
 import axios from 'axios'
+import art from '../assets/Artwork.png'
 
 
 const baseURL = "http://127.0.0.1:8000";
@@ -43,6 +44,11 @@ export const readMusic = async(youtube_file_name) => {
 }
 export const readThumbnail = async(thumbnail_name) => {
     try {
+        if (thumbnail_name == null) {
+            return art;
+        }
+
+
         const response = await axios.get(baseURL + '/music_thumbnail/' + thumbnail_name, {
             responseType: 'blob',
         });
@@ -73,6 +79,20 @@ export const createPlayList = async(youtube_url) => {
         return response.data;
     } catch (error) {
         console.error('Error creating playlist:', error);
+        throw error;
+    }
+}
+
+
+export const addYoutubeVideo = async(youtube_url, dictionary_arg) => {
+    try {
+        const response = await axios.post(baseURL + '/playlists/', {
+            "yt_link" : youtube_url,
+            "params" : dictionary_arg
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating song from youtube video:', error);
         throw error;
     }
 }

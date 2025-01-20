@@ -9,7 +9,9 @@ const AudioPlayerMain = () => {
     return (
         <div className="relative">
                 <AudioHeader/>
-                <AudioPlaylist />
+                <div className="flex ">
+                    <AudioPlaylist className = 'flex-1'/>
+                </div>
                 <AudioControls/>
         </div>
     );
