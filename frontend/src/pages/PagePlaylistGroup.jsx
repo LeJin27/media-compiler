@@ -27,9 +27,6 @@ const PagePlaylistGroup = ({}) => {
         setPlaylistFromDB()
     }, []); 
 
-
-
-
     return (
         <div >
             {currentPlaylist}

@@ -80,14 +80,8 @@ let AudioPlaylist = ({}) => {
     return (
         <div className='relative flex-1' onClick={handleClick}>
             <div className='flex items-center'>
-
                 <div className={`ml-[0.5rem] ${styles.playlistheader}`}>{currentPlaylist}</div>
-
             </div>
-
-
-
-
 
             <div className="flex flex-col h-screen">
                 <div className='flex gap-5 m-2 justify-between'>
