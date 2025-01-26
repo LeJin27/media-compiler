@@ -15,7 +15,7 @@ const PagePlaylist = () => {
 
     return (
 
-        <div className='flex-col relative'>
+        <div className=''>
             <AudioPlayerMain />
         </div>
     );
