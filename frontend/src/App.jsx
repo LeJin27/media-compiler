@@ -8,6 +8,7 @@ import styles from './App.module.css';
 import PagePlaylistGroup from "./pages/PagePlaylistGroup";
 import AudioPlayerState from "./components/context/AudioPlayerState";
 import AudioControls from "./components/AudioControls/AudioControls";
+import PageHome from "./pages/PageHome";
 
 
 const App = () => (
@@ -16,7 +17,7 @@ const App = () => (
         <RouterHeader />
 
         <Routes>
-          <Route path="/" element={<div>Welcome to the Home page</div>} />
+          <Route path="/" element={<PageHome />} />
           <Route path="/login" element={<PageLogin />} />
           <Route path="/songs" element={<PagePlaylist />} />
           <Route path="/playlists" element={<PagePlaylistGroup />} />
